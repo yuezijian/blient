@@ -1,5 +1,7 @@
 #include <QtWidgets>
 
+#include <ActiveQt/QAxWidget>
+
 #include "MainWindow.hpp"
 
 
@@ -17,9 +19,20 @@ int main( int argc, char* argv[] )
 
     QApplication application( argc, argv );
 
-    MainWindow window;
+    QAxWidget widget;
 
-    window.showMaximized();
+    widget.setControl( "{6F54E999-11EF-45DC-9E58-2858314C7016}" );
+    widget.show();
+
+    //MainWindow window;
+
+    //window.ToURL( "http://10.68.4.11/webcomm" );
+    //window.showMaximized();
+
+    //if ( QLibrary::isLibrary( "editor.dll" ) )
+    //{
+    //    int i = 0;
+    //}
 
     return QApplication::exec();
 }
