@@ -7,6 +7,10 @@
 
 #include <QWebEngineView>
 
+#ifdef _WIN32
+#include <ActiveQt/QAxWidget>
+#endif
+
 
 MainWindow::MainWindow()
 {
@@ -15,13 +19,13 @@ MainWindow::MainWindow()
     toolbar->setFloatable( false );
     toolbar->setMovable( false );
 
-    auto nav_back    = new QAction( tr( "Back"    ) );
+    auto nav_back = new QAction( tr( "Back" ) );
     auto nav_forward = new QAction( tr( "Forward" ) );
     auto nav_refresh = new QAction( tr( "Refresh" ) );
 
     this->nav_address_ = new QLineEdit;
 
-    toolbar->addAction( nav_back    );
+    toolbar->addAction( nav_back );
     toolbar->addAction( nav_forward );
     toolbar->addAction( nav_refresh );
 
@@ -29,15 +33,34 @@ MainWindow::MainWindow()
 
     QMainWindow::addToolBar( Qt::TopToolBarArea, toolbar );
 
+    auto splitter = new QSplitter;
+
+    QMainWindow::setCentralWidget( splitter );
+
     this->view_ = new QWebEngineView;
 
-    this->setCentralWidget( this->view_ );
+    splitter->addWidget( this->view_ );
 
     QObject::connect
-        (
-            this->nav_address_, &QLineEdit::returnPressed,
-            [ = ]() { this->ToURL( this->nav_address_->text() ); }
-        );
+    (
+        this->nav_address_, &QLineEdit::returnPressed,
+        [ = ] () { this->ToURL( this->nav_address_->text() ); }
+    );
+
+#ifdef _WIN32
+
+    //if ( QLibrary::isLibrary( "editor.dll" ) )
+    //{
+    //    int i = 0;
+    //}
+
+    auto ax_widget = new QAxWidget;
+
+    ax_widget->setControl( "{6F54E999-11EF-45DC-9E58-2858314C7016}" );
+
+    splitter->addWidget( ax_widget );
+
+#endif
 
     auto status = QMainWindow::statusBar();
 
