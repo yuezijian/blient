@@ -58,6 +58,19 @@ MainWindow::MainWindow()
 
     ax_widget->setControl( "{6F54E999-11EF-45DC-9E58-2858314C7016}" );
 
+    QFile file( "D:/Project/blient/test.xml" );
+
+    if ( file.open( QIODevice::ReadOnly | QIODevice::Text ) )
+    {
+        QTextStream stream( &file );
+
+        auto content = stream.readAll();
+
+        auto result = ax_widget->dynamicCall( "ExecuteCommand( const QString&, bool, const QString& )", "FileOpenString", false, content );
+
+        qDebug() << result;
+    }
+
     splitter->addWidget( ax_widget );
 
 #endif
