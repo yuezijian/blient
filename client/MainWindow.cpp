@@ -1,11 +1,13 @@
 //
-// Created by ÔÀ×Ó½£ on 2019/9/27.
+// Created by å²³å­å‰‘ on 2019/9/27.
 //
 
 
 #include "MainWindow.hpp"
 
 #include <QWebEngineView>
+
+#include "WebEnginePage.hpp"
 
 #ifdef _WIN32
 #include <ActiveQt/QAxWidget>
@@ -38,6 +40,10 @@ MainWindow::MainWindow()
     QMainWindow::setCentralWidget( splitter );
 
     this->view_ = new QWebEngineView;
+
+    this->page_ = new WebEnginePage;
+
+    this->view_->setPage( this->page_ );
 
     splitter->addWidget( this->view_ );
 
@@ -80,6 +86,13 @@ MainWindow::MainWindow()
     status->showMessage( tr( "Ready" ) );
 
     QMainWindow::setMinimumSize( QSize( 800, 500 ) );
+}
+
+MainWindow::~MainWindow()
+{
+    delete this->page_;
+
+    this->page_ = Q_NULLPTR;
 }
 
 void MainWindow::ToURL( const QString& address )

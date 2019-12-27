@@ -1,5 +1,5 @@
 //
-// Created by ‘¿◊”Ω£ on 2019/9/27.
+// Created by Â≤≥Â≠êÂâë on 2019/9/27.
 //
 
 
@@ -12,6 +12,8 @@
 
 class QWebEngineView;
 
+class WebEnginePage;
+
 
 class MainWindow : public QMainWindow
 {
@@ -19,6 +21,7 @@ Q_OBJECT
 
 public:
     MainWindow();
+    ~MainWindow();
 
     void ToURL( const QString& address );
 
@@ -26,6 +29,8 @@ private:
     QLineEdit* nav_address_ = Q_NULLPTR;
 
     QWebEngineView* view_ = Q_NULLPTR;
+
+    WebEnginePage* page_ = Q_NULLPTR;
 };
 
 

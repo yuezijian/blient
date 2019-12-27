@@ -19,6 +19,8 @@ find_package(Qt5 CONFIG REQUIRED ${QT_PACKAGES})
 add_executable(client
         main.cpp
         MainWindow.cpp
+        WebEngineChannelObject.cpp
+        WebEnginePage.cpp
         )
 
 target_link_libraries(client ${QT_LIBRARIES})

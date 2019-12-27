@@ -19,7 +19,6 @@ int main( int argc, char* argv[] )
 
     MainWindow window;
 
-    window.ToURL( "http://10.68.4.11/webcomm" );
     window.showMaximized();
 
     return QApplication::exec();
