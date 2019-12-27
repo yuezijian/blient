@@ -16,11 +16,6 @@ class WebEnginePage : public QWebEnginePage
 {
 Q_OBJECT
 
-public:
-    explicit WebEnginePage( QObject* parent = Q_NULLPTR );
-
-    void ChangeProperty( const QString& value );
-
 Q_SIGNALS:
     void JavaScriptConsoleMessage
         (
@@ -38,9 +33,6 @@ protected:
             int line_number,
             const QString& source_id
         ) override;
-
-private:
-    WebEngineChannelObject* object_ = Q_NULLPTR;
 };
 
 

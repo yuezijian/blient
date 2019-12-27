@@ -4,14 +4,8 @@
 
 #include "WebEngineChannelObject.hpp"
 
-#include <QDebug>
-
 
 QVariant WebEngineChannelObject::FileOpenString( const QVariant& value )
 {
-    qDebug() << value;
-
-    QString content = value.toString();
-
-    return QVariant( "反馈：收到" );
+    return emit JS_FileOpenString( value.toString() );
 }

@@ -5,8 +5,10 @@
 
 #include "MainWindow.hpp"
 
+#include <QWebChannel>
 #include <QWebEngineView>
 
+#include "WebEngineChannelObject.hpp"
 #include "WebEnginePage.hpp"
 
 #ifdef _WIN32
@@ -41,9 +43,9 @@ MainWindow::MainWindow()
 
     this->view_ = new QWebEngineView;
 
-    this->page_ = new WebEnginePage;
+    //this->page_ = new WebEnginePage;
 
-    this->view_->setPage( this->page_ );
+    //this->view_->setPage( this->page_ );
 
     splitter->addWidget( this->view_ );
 
@@ -64,18 +66,38 @@ MainWindow::MainWindow()
 
     ax_widget->setControl( "{6F54E999-11EF-45DC-9E58-2858314C7016}" );
 
-    QFile file( "D:/Project/blient/test.xml" );
-
-    if ( file.open( QIODevice::ReadOnly | QIODevice::Text ) )
+    auto page = this->view_->page();
     {
-        QTextStream stream( &file );
+        auto object = new WebEngineChannelObject;
 
-        auto content = stream.readAll();
+        auto channel = new QWebChannel;
 
-        auto result = ax_widget->dynamicCall( "ExecuteCommand( const QString&, bool, const QString& )", "FileOpenString", false, content );
+        channel->registerObject( "editor", object );
 
-        qDebug() << result;
+        page->setWebChannel( channel );
+
+        QObject::connect
+        (
+            object, &WebEngineChannelObject::JS_FileOpenString,
+            [ = ] ( const QString& content )
+        {
+            return ax_widget->dynamicCall( "ExecuteCommand( const QString&, bool, const QString& )", "FileOpenString", false, content );
+        }
+        );
     }
+
+    //QFile file( "D:/Project/blient/test.xml" );
+
+    //if ( file.open( QIODevice::ReadOnly | QIODevice::Text ) )
+    //{
+    //    QTextStream stream( &file );
+
+    //    auto content = stream.readAll();
+
+    //    auto result = ax_widget->dynamicCall( "ExecuteCommand( const QString&, bool, const QString& )", "FileOpenString", false, content );
+
+    //    qDebug() << result;
+    //}
 
     splitter->addWidget( ax_widget );
 
@@ -90,9 +112,9 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
-    delete this->page_;
+    //delete this->page_;
 
-    this->page_ = Q_NULLPTR;
+    //this->page_ = Q_NULLPTR;
 }
 
 void MainWindow::ToURL( const QString& address )

@@ -26,6 +26,9 @@ Q_SIGNALS:
 public Q_SLOTS:
     QVariant FileOpenString( const QVariant& value );
 
+Q_SIGNALS:
+    QVariant JS_FileOpenString( const QString& content );
+
 private:
     QString my_property_;
 };

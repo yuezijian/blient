@@ -12,7 +12,7 @@
 
 class QWebEngineView;
 
-class WebEnginePage;
+//class WebEnginePage;
 
 
 class MainWindow : public QMainWindow
@@ -30,7 +30,7 @@ private:
 
     QWebEngineView* view_ = Q_NULLPTR;
 
-    WebEnginePage* page_ = Q_NULLPTR;
+    //WebEnginePage* page_ = Q_NULLPTR;
 };
 
 
