@@ -7,5 +7,7 @@
 
 QVariant WebEngineChannelObject::FileOpenString( const QVariant& value )
 {
-    return emit JS_FileOpenString( value.toString() );
+    emit AXC_Editor_FileOpenString( value.toString() );
+
+    return QVariant();
 }

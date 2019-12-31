@@ -2,6 +2,7 @@
 // Created by 岳子剑 on 2019/11/5.
 //
 
+
 #ifndef WEB_ENGINE_CHANNEL_OBJECT__HPP
 #define WEB_ENGINE_CHANNEL_OBJECT__HPP
 
@@ -27,7 +28,7 @@ public Q_SLOTS:
     QVariant FileOpenString( const QVariant& value );
 
 Q_SIGNALS:
-    QVariant JS_FileOpenString( const QString& content );
+    void AXC_Editor_FileOpenString( const QString& content );
 
 private:
     QString my_property_;

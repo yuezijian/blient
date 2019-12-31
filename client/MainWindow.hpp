@@ -25,6 +25,11 @@ public:
 
     void ToURL( const QString& address );
 
+#ifdef _WIN32
+private:
+    void InstallActiveX();
+#endif
+
 private:
     QLineEdit* nav_address_ = Q_NULLPTR;
 

@@ -8,12 +8,7 @@
 #include <QWebChannel>
 #include <QWebEngineView>
 
-#include "WebEngineChannelObject.hpp"
 #include "WebEnginePage.hpp"
-
-#ifdef _WIN32
-#include <ActiveQt/QAxWidget>
-#endif
 
 
 MainWindow::MainWindow()
@@ -50,41 +45,12 @@ MainWindow::MainWindow()
     splitter->addWidget( this->view_ );
 
     QObject::connect
-    (
-        this->nav_address_, &QLineEdit::returnPressed,
-        [ = ] () { this->ToURL( this->nav_address_->text() ); }
-    );
-
-#ifdef _WIN32
-
-    //if ( QLibrary::isLibrary( "editor.dll" ) )
-    //{
-    //    int i = 0;
-    //}
-
-    auto ax_widget = new QAxWidget;
-
-    ax_widget->setControl( "{6F54E999-11EF-45DC-9E58-2858314C7016}" );
-
-    auto page = this->view_->page();
-    {
-        auto object = new WebEngineChannelObject;
-
-        auto channel = new QWebChannel;
-
-        channel->registerObject( "editor", object );
-
-        page->setWebChannel( channel );
-
-        QObject::connect
         (
-            object, &WebEngineChannelObject::JS_FileOpenString,
-            [ = ] ( const QString& content )
-        {
-            return ax_widget->dynamicCall( "ExecuteCommand( const QString&, bool, const QString& )", "FileOpenString", false, content );
-        }
+            this->nav_address_, &QLineEdit::returnPressed,
+            [ = ] () { this->ToURL( this->nav_address_->text() ); }
         );
-    }
+
+    #ifdef _WIN32
 
     //QFile file( "D:/Project/blient/test.xml" );
 
@@ -93,15 +59,11 @@ MainWindow::MainWindow()
     //    QTextStream stream( &file );
 
     //    auto content = stream.readAll();
-
-    //    auto result = ax_widget->dynamicCall( "ExecuteCommand( const QString&, bool, const QString& )", "FileOpenString", false, content );
-
-    //    qDebug() << result;
     //}
 
-    splitter->addWidget( ax_widget );
+    splitter->addWidget( this->InstallActiveX() );
 
-#endif
+    #endif
 
     auto status = QMainWindow::statusBar();
 
@@ -130,3 +92,26 @@ void MainWindow::ToURL( const QString& address )
 
     this->nav_address_->setText( this->view_->url().toDisplayString() );
 }
+
+#ifdef _WIN32
+void MainWindow::InstallActiveX()
+{
+    QLibrary library( "../activex/activex.dll" );
+
+    if ( library.load() )
+    {
+        typedef QWidget* ( *Function )( QWebEnginePage*, const QString& name );
+
+        auto CreateWidgetAX = ( Function )( library.resolve( "CreateWidgetAX" ) );
+
+        if ( CreateWidgetAX )
+        {
+            QWidget* widget = CreateWidgetAX( this->view_->page(), "ax" );
+        }
+    }
+    else
+    {
+        QMessageBox::warning( this, tr( "Error" ), library.errorString() );
+    }
+}
+#endif

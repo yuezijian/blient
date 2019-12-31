@@ -1,25 +1,8 @@
 project(client)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-
-set(QT_PACKAGES Core Gui WebEngineWidgets Widgets)
-set(QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::Widgets)
-
-if(WIN32)
-    list(APPEND QT_PACKAGES AxContainer)
-    list(APPEND QT_LIBRARIES Qt5::AxContainer)
-endif()
-
-find_package(Qt5 CONFIG REQUIRED ${QT_PACKAGES})
-
 add_executable(client
         main.cpp
         MainWindow.cpp
-        WebEngineChannelObject.cpp
         WebEnginePage.cpp
         )
 
