@@ -50,6 +50,8 @@ MainWindow::MainWindow()
             [ = ] () { this->ToURL( this->nav_address_->text() ); }
         );
 
+    QWidget* ax_widget = Q_NULLPTR;
+
     #ifdef _WIN32
 
     //QFile file( "D:/Project/blient/test.xml" );
@@ -61,9 +63,24 @@ MainWindow::MainWindow()
     //    auto content = stream.readAll();
     //}
 
-    splitter->addWidget( this->InstallActiveX() );
+    ax_widget = this->InstallActiveX();
+
+    #else
+
+    auto label = new QLabel;
+
+    label->setAlignment( Qt::AlignCenter );
+    label->setMargin( 20 );
+    label->setText( "Will install ActiveX control in windows" );
+
+    ax_widget = label;
 
     #endif
+
+    if ( ax_widget )
+    {
+        splitter->addWidget( ax_widget );
+    }
 
     auto status = QMainWindow::statusBar();
 
@@ -94,9 +111,10 @@ void MainWindow::ToURL( const QString& address )
 }
 
 #ifdef _WIN32
-void MainWindow::InstallActiveX()
+QWidget* MainWindow::InstallActiveX()
 {
-    QLibrary library( "../activex/activex.dll" );
+    //QLibrary library( "../activex/activex.dll" );
+    QLibrary library( "../../activex/Debug/activex.dll" );
 
     if ( library.load() )
     {
@@ -106,12 +124,14 @@ void MainWindow::InstallActiveX()
 
         if ( CreateWidgetAX )
         {
-            QWidget* widget = CreateWidgetAX( this->view_->page(), "ax" );
+            return CreateWidgetAX( this->view_->page(), "ax" );
         }
     }
     else
     {
         QMessageBox::warning( this, tr( "Error" ), library.errorString() );
     }
+
+    return Q_NULLPTR;
 }
 #endif

@@ -14,6 +14,28 @@
 
 #include <ActiveQt/QAxWidget>
 
+
+class AxWidgetEditor : public QAxWidget
+{
+public:
+    AxWidgetEditor() : QAxWidget( "{6F54E999-11EF-45DC-9E58-2858314C7016}" )
+    {
+    }
+
+protected:
+    //void mousePressEvent( QMouseEvent* event ) override
+    //{
+    //    qDebug() << "Mouse Pressed";
+
+    //    QAxWidget::setFocus();
+    //    QAxWidget::clearFocus();
+    //    QAxWidget::mousePressEvent( event );
+    //}
+
+private:
+    ;
+};
+
 #endif
 
 
@@ -30,20 +52,20 @@ extern "C" Q_DECL_EXPORT QWidget* CreateWidgetAX( QWebEnginePage* page, const QS
 
     page->setWebChannel( channel );
 
-    auto ax_widget = new QAxWidget;
+    auto ax_widget = new AxWidgetEditor;
 
-    if ( ax_widget->setControl( "{6F54E999-11EF-45DC-9E58-2858314C7016}" ) )
+    if ( !ax_widget->isNull() )
     {
         QObject::connect
-            (
-                object, &WebEngineChannelObject::AXC_Editor_FileOpenString,
-                [ = ] ( const QString& content )
-                {
-                    auto function = "ExecuteCommand( const QString&, bool, const QString& )";
+        (
+            object, &WebEngineChannelObject::AXC_Editor_FileOpenString,
+            [ = ] ( const QString& content )
+            {
+                auto function = "ExecuteCommand( const QString&, bool, const QString& )";
 
-                    ax_widget->dynamicCall( function, "FileOpenString", false, content );
-                }
-            );
+                ax_widget->dynamicCall( function, "FileOpenString", false, content );
+            }
+        );
 
         return ax_widget;
     }

@@ -27,7 +27,7 @@ public:
 
 #ifdef _WIN32
 private:
-    void InstallActiveX();
+    QWidget* InstallActiveX();
 #endif
 
 private:

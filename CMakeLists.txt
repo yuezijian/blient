@@ -17,7 +17,7 @@ if(WIN32)
 endif()
 
 if(MSVC)
-    add_compile_options(/WD4819)
+    add_compile_options(/wd4819)
 endif()
 
 find_package(Qt5 CONFIG REQUIRED ${QT_PACKAGES})
