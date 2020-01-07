@@ -11,7 +11,7 @@
 
 
 //class WebEnginePage;
-class QWebEngineView;
+class WebEngineView;
 
 
 class MainWindow : public QMainWindow
@@ -34,11 +34,9 @@ private:
 private:
     QLineEdit* nav_address_ = Q_NULLPTR;
 
-    QSplitter* splitter_ = Q_NULLPTR;
-
-    QWebEngineView* view_ = Q_NULLPTR;
-
     //WebEnginePage* page_ = Q_NULLPTR;
+
+    WebEngineView* view_ = Q_NULLPTR;
 };
 
 

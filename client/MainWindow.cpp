@@ -8,7 +8,8 @@
 #include <QWebChannel>
 #include <QWebEngineView>
 
-#include "WebEnginePage.hpp"
+//#include "WebEnginePage.hpp"
+#include "WebEngineView.hpp"
 
 
 MainWindow::MainWindow()
@@ -106,24 +107,22 @@ void MainWindow::SetupUI()
 
     QMainWindow::setMinimumSize( QSize( 800, 500 ) );
 
-    this->splitter_ = new QSplitter;
+    this->view_ = new WebEngineView;
 
-    QMainWindow::setCentralWidget( this->splitter_ );
+    QObject::connect
+    (
+        this->nav_address_, &QLineEdit::returnPressed,
+        [ = ] () { this->ToURL( this->nav_address_->text() ); }
+    );
 
-    //this->view_ = new QWebEngineView;
-
-    //QObject::connect
-    //(
-    //    this->nav_address_, &QLineEdit::returnPressed,
-    //    [ = ] () { this->ToURL( this->nav_address_->text() ); }
-    //);
-
-    //this->splitter_->addWidget( this->view_ );
-
-    this->splitter_->addWidget( new QTextEdit );
+    QMainWindow::setCentralWidget( this->view_ );
 }
 
 void MainWindow::AddPluginWidget( QWidget* widget )
 {
-    this->splitter_->addWidget( widget );
+    auto dock = new QDockWidget;
+
+    dock->setWidget( widget );
+
+    QMainWindow::addDockWidget( Qt::RightDockWidgetArea, dock );
 }
