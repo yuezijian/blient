@@ -10,9 +10,8 @@
 #include <QtWidgets>
 
 
-class QWebEngineView;
-
 //class WebEnginePage;
+class QWebEngineView;
 
 
 class MainWindow : public QMainWindow
@@ -23,15 +22,19 @@ public:
     MainWindow();
     ~MainWindow();
 
+    void InstallPlugin();
+
     void ToURL( const QString& address );
 
-#ifdef _WIN32
 private:
-    QWidget* InstallActiveX();
-#endif
+    void SetupUI();
+
+    void AddPluginWidget( QWidget* widget );
 
 private:
     QLineEdit* nav_address_ = Q_NULLPTR;
+
+    QSplitter* splitter_ = Q_NULLPTR;
 
     QWebEngineView* view_ = Q_NULLPTR;
 

@@ -13,80 +13,7 @@
 
 MainWindow::MainWindow()
 {
-    auto toolbar = new QToolBar();
-
-    toolbar->setFloatable( false );
-    toolbar->setMovable( false );
-
-    auto nav_back = new QAction( tr( "Back" ) );
-    auto nav_forward = new QAction( tr( "Forward" ) );
-    auto nav_refresh = new QAction( tr( "Refresh" ) );
-
-    this->nav_address_ = new QLineEdit;
-
-    toolbar->addAction( nav_back );
-    toolbar->addAction( nav_forward );
-    toolbar->addAction( nav_refresh );
-
-    toolbar->addWidget( this->nav_address_ );
-
-    QMainWindow::addToolBar( Qt::TopToolBarArea, toolbar );
-
-    auto splitter = new QSplitter;
-
-    QMainWindow::setCentralWidget( splitter );
-
-    this->view_ = new QWebEngineView;
-
-    //this->page_ = new WebEnginePage;
-
-    //this->view_->setPage( this->page_ );
-
-    splitter->addWidget( this->view_ );
-
-    QObject::connect
-        (
-            this->nav_address_, &QLineEdit::returnPressed,
-            [ = ] () { this->ToURL( this->nav_address_->text() ); }
-        );
-
-    QWidget* ax_widget = Q_NULLPTR;
-
-    #ifdef _WIN32
-
-    //QFile file( "D:/Project/blient/test.xml" );
-
-    //if ( file.open( QIODevice::ReadOnly | QIODevice::Text ) )
-    //{
-    //    QTextStream stream( &file );
-
-    //    auto content = stream.readAll();
-    //}
-
-    ax_widget = this->InstallActiveX();
-
-    #else
-
-    auto label = new QLabel;
-
-    label->setAlignment( Qt::AlignCenter );
-    label->setMargin( 20 );
-    label->setText( "Will install ActiveX control in windows" );
-
-    ax_widget = label;
-
-    #endif
-
-    if ( ax_widget )
-    {
-        splitter->addWidget( ax_widget );
-    }
-
-    auto status = QMainWindow::statusBar();
-
-    status->showMessage( tr( "Ready" ) );
-
-    QMainWindow::setMinimumSize( QSize( 800, 500 ) );
+    this->SetupUI();
 }
 
 MainWindow::~MainWindow()
@@ -94,6 +21,48 @@ MainWindow::~MainWindow()
     //delete this->page_;
 
     //this->page_ = Q_NULLPTR;
+}
+
+void MainWindow::InstallPlugin()
+{
+    #ifdef _WIN32
+
+    QLibrary library( "../../activex/Debug/activex.dll" );
+    //QLibrary library( "../../activex/Release/activex.dll" );
+
+    if ( library.load() )
+    {
+        typedef QWidget* ( *Function )( QWebEnginePage*, const QString& );
+
+        auto CreateWidget = ( Function )( library.resolve( "CreateWidget" ) );
+
+        if ( CreateWidget )
+        {
+            //QWidget* widget = CreateWidget( this->view_->page(), "ax" );
+            QWidget* widget = CreateWidget( Q_NULLPTR, "ax" );
+
+            if ( widget )
+            {
+                this->AddPluginWidget( widget );
+            }
+        }
+    }
+    else
+    {
+        QMessageBox::warning( this, tr( "Error" ), library.errorString() );
+    }
+
+    #else
+
+    auto label = new QLabel;
+
+    label->setAlignment( Qt::AlignCenter );
+    label->setMargin( 20 );
+    label->setText( "Windows ActiveX Control" );
+
+    this->AddPluginWidget( label );
+
+    #endif
 }
 
 void MainWindow::ToURL( const QString& address )
@@ -110,28 +79,51 @@ void MainWindow::ToURL( const QString& address )
     this->nav_address_->setText( this->view_->url().toDisplayString() );
 }
 
-#ifdef _WIN32
-QWidget* MainWindow::InstallActiveX()
+void MainWindow::SetupUI()
 {
-    //QLibrary library( "../activex/activex.dll" );
-    QLibrary library( "../../activex/Debug/activex.dll" );
+    auto toolbar = new QToolBar();
 
-    if ( library.load() )
-    {
-        typedef QWidget* ( *Function )( QWebEnginePage*, const QString& name );
+    toolbar->setFloatable( false );
+    toolbar->setMovable( false );
 
-        auto CreateWidgetAX = ( Function )( library.resolve( "CreateWidgetAX" ) );
+    auto nav_back    = new QAction( tr( "Back"    ) );
+    auto nav_forward = new QAction( tr( "Forward" ) );
+    auto nav_refresh = new QAction( tr( "Refresh" ) );
 
-        if ( CreateWidgetAX )
-        {
-            return CreateWidgetAX( this->view_->page(), "ax" );
-        }
-    }
-    else
-    {
-        QMessageBox::warning( this, tr( "Error" ), library.errorString() );
-    }
+    this->nav_address_ = new QLineEdit;
 
-    return Q_NULLPTR;
+    toolbar->addAction( nav_back );
+    toolbar->addAction( nav_forward );
+    toolbar->addAction( nav_refresh );
+
+    toolbar->addWidget( this->nav_address_ );
+
+    QMainWindow::addToolBar( Qt::TopToolBarArea, toolbar );
+
+    auto status = QMainWindow::statusBar();
+
+    status->showMessage( tr( "Ready" ) );
+
+    QMainWindow::setMinimumSize( QSize( 800, 500 ) );
+
+    this->splitter_ = new QSplitter;
+
+    QMainWindow::setCentralWidget( this->splitter_ );
+
+    //this->view_ = new QWebEngineView;
+
+    //QObject::connect
+    //(
+    //    this->nav_address_, &QLineEdit::returnPressed,
+    //    [ = ] () { this->ToURL( this->nav_address_->text() ); }
+    //);
+
+    //this->splitter_->addWidget( this->view_ );
+
+    this->splitter_->addWidget( new QTextEdit );
 }
-#endif
+
+void MainWindow::AddPluginWidget( QWidget* widget )
+{
+    this->splitter_->addWidget( widget );
+}

@@ -19,6 +19,8 @@ int main( int argc, char* argv[] )
 
     MainWindow window;
 
+    window.InstallPlugin();
+
     window.showMaximized();
 
     return QApplication::exec();

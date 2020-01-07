@@ -5,14 +5,12 @@
 
 #include <QtWidgets/QtWidgets>
 
+#include <ActiveQt/QAxWidget>
+
 #include <QWebEnginePage>
 #include <QWebChannel>
 
 #include "WebEngineChannelObject.hpp"
-
-#ifdef _WIN32
-
-#include <ActiveQt/QAxWidget>
 
 
 class AxWidgetEditor : public QAxWidget
@@ -23,54 +21,83 @@ public:
     }
 
 protected:
+    //void focusInEvent( QFocusEvent* event ) override
+    //{
+    //    qDebug() << "focus in";
+
+    //    QAxWidget::focusInEvent( event );
+    //}
+
+    //void focusOutEvent( QFocusEvent* event ) override
+    //{
+    //    qDebug() << "focus out";
+
+    //    QAxWidget::focusOutEvent( event );
+    //}
+
+    //void resizeEvent( QResizeEvent* event ) override
+    //{
+    //    qDebug() << "axw resize";
+
+    //    //QAxWidget::setFocus();
+    //    //QAxWidget::clearFocus();
+
+    //    //QAxWidget::resizeEvent( event );
+
+    //    QAxWidget::update();
+    //}
+
+    //bool translateKeyEvent( int message, int keycode ) const override
+    //{
+    //    return QAxWidget::translateKeyEvent( message, keycode );
+    //}
+
     //void mousePressEvent( QMouseEvent* event ) override
     //{
     //    qDebug() << "Mouse Pressed";
 
-    //    QAxWidget::setFocus();
-    //    QAxWidget::clearFocus();
+    //    //QAxWidget::setFocus();
+
+    //    //QAxWidget::clearFocus();
+    //    QAxWidget::update();
     //    QAxWidget::mousePressEvent( event );
+
+    //    //QAxWidget::setFocus();
+    //    //QAxWidget::update();
     //}
 
 private:
     ;
 };
 
-#endif
 
-
-
-extern "C" Q_DECL_EXPORT QWidget* CreateWidgetAX( QWebEnginePage* page, const QString& name )
+extern "C" Q_DECL_EXPORT QWidget* CreateWidget( QWebEnginePage* page, const QString& name )
 {
-    #ifdef _WIN32
-
-    auto channel = new QWebChannel;
-
-    auto object = new WebEngineChannelObject;
-
-    channel->registerObject( name, object );
-
-    page->setWebChannel( channel );
-
     auto ax_widget = new AxWidgetEditor;
 
-    if ( !ax_widget->isNull() )
-    {
-        QObject::connect
-        (
-            object, &WebEngineChannelObject::AXC_Editor_FileOpenString,
-            [ = ] ( const QString& content )
-            {
-                auto function = "ExecuteCommand( const QString&, bool, const QString& )";
+    //if ( !ax_widget->isNull() )
+    //{
+    //    auto channel = new QWebChannel;
 
-                ax_widget->dynamicCall( function, "FileOpenString", false, content );
-            }
-        );
+    //    auto object = new WebEngineChannelObject;
 
-        return ax_widget;
-    }
+    //    channel->registerObject( name, object );
 
-    #endif
+    //    page->setWebChannel( channel );
 
-    return Q_NULLPTR;
+    //    QObject::connect
+    //    (
+    //        object, &WebEngineChannelObject::AXC_Editor_FileOpenString,
+    //        [ = ] ( const QString& content )
+    //    {
+    //        auto function = "ExecuteCommand( const QString&, bool, const QString& )";
+
+    //        ax_widget->dynamicCall( function, "FileOpenString", false, content );
+    //    }
+    //    );
+
+    //    return ax_widget;
+    //}
+
+    return ax_widget;
 }
