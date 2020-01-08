@@ -39,8 +39,7 @@ void MainWindow::InstallPlugin()
 
         if ( CreateWidget )
         {
-            //QWidget* widget = CreateWidget( this->view_->page(), "ax" );
-            QWidget* widget = CreateWidget( Q_NULLPTR, "ax" );
+            QWidget* widget = CreateWidget( this->view_->page(), "ax" );
 
             if ( widget )
             {
@@ -120,9 +119,12 @@ void MainWindow::SetupUI()
 
 void MainWindow::AddPluginWidget( QWidget* widget )
 {
-    auto dock = new QDockWidget;
+    //auto dock = new QDockWidget;
 
-    dock->setWidget( widget );
+    //dock->setWidget( widget );
 
-    QMainWindow::addDockWidget( Qt::RightDockWidgetArea, dock );
+    //QMainWindow::addDockWidget( Qt::RightDockWidgetArea, dock );
+
+    widget->setWindowFlags( Qt::Window );
+    widget->show();
 }
