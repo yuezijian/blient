@@ -1,9 +1,11 @@
+#include "Client.hpp"
+
 #include <QtWidgets>
 
 #include "MainWindow.hpp"
 
 
-int main( int argc, char* argv[] )
+int Client::Main( int argc, char* argv[] )
 {
     // QApplication 对象创建之前
     //
@@ -19,9 +21,14 @@ int main( int argc, char* argv[] )
 
     MainWindow window;
 
-    window.InstallPlugin();
+    //window.InstallPlugin();
 
     window.showMaximized();
 
     return QApplication::exec();
+}
+
+Version Client::InstanceVersion() const
+{
+    return Version( 0, 0, 1 );
 }

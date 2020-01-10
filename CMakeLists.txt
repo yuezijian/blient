@@ -22,8 +22,11 @@ endif()
 
 find_package(Qt5 CONFIG REQUIRED ${QT_PACKAGES})
 
-if(WIN32)
-    add_subdirectory(activex)
-endif()
+#set(BLIENT_DEV_MODE TRUE)
 
 add_subdirectory(client)
+add_subdirectory(launcher)
+
+if(WIN32)
+    add_subdirectory(plugin/activex)
+endif()

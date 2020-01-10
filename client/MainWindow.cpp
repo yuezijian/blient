@@ -49,7 +49,7 @@ void MainWindow::InstallPlugin()
     }
     else
     {
-        QMessageBox::warning( this, tr( "Error" ), library.errorString() );
+        QMessageBox::warning( this, QObject::tr( "Error" ), library.errorString() );
     }
 
     #else
@@ -86,9 +86,9 @@ void MainWindow::SetupUI()
     toolbar->setFloatable( false );
     toolbar->setMovable( false );
 
-    auto nav_back    = new QAction( tr( "Back"    ) );
-    auto nav_forward = new QAction( tr( "Forward" ) );
-    auto nav_refresh = new QAction( tr( "Refresh" ) );
+    auto nav_back    = new QAction( QObject::tr( "Back"    ) );
+    auto nav_forward = new QAction( QObject::tr( "Forward" ) );
+    auto nav_refresh = new QAction( QObject::tr( "Refresh" ) );
 
     this->nav_address_ = new QLineEdit;
 
@@ -102,7 +102,7 @@ void MainWindow::SetupUI()
 
     auto status = QMainWindow::statusBar();
 
-    status->showMessage( tr( "Ready" ) );
+    status->showMessage( QObject::tr( "Ready" ) );
 
     QMainWindow::setMinimumSize( QSize( 800, 500 ) );
 
