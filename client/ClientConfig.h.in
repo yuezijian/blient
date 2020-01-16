@@ -1,0 +1,3 @@
+#define Client_VERSION_MAJOR @Client_VERSION_MAJOR@
+#define Client_VERSION_MINOR @Client_VERSION_MINOR@
+#define Client_VERSION_PATCH @Client_VERSION_PATCH@

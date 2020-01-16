@@ -1,4 +1,4 @@
-project(client)
+project(client VERSION 0.0.1)
 
 set(BLIENT_CLIENT_SOURCE
         _client.hpp
