@@ -7,6 +7,8 @@
 
 int main( int argc, char* argv[] )
 {
+    ;
+
     QLibrary library( "../client/client.dylib" );
 
     if ( library.load() )

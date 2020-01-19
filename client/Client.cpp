@@ -1,5 +1,7 @@
 #include "Client.hpp"
 
+#include <ClientConfig.hpp>
+
 #include <QtWidgets>
 
 #include "MainWindow.hpp"
@@ -30,5 +32,10 @@ int Client::Main( int argc, char* argv[] )
 
 Version Client::InstanceVersion() const
 {
-    return Version( 0, 0, 1 );
+    return Version
+        (
+            CLIENT_VERSION_MAJOR,
+            CLIENT_VERSION_MINOR,
+            CLIENT_VERSION_PATCH
+        );
 }

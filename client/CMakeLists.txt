@@ -1,5 +1,7 @@
 project(client VERSION 0.0.1)
 
+configure_file(ClientConfig.h.in ClientConfig.hpp)
+
 set(BLIENT_CLIENT_SOURCE
         _client.hpp
         _client.cpp
@@ -14,5 +16,7 @@ set(BLIENT_CLIENT_SOURCE
         )
 
 add_library(client SHARED ${BLIENT_CLIENT_SOURCE})
+
+target_include_directories(client PRIVATE ${PROJECT_BINARY_DIR})
 
 target_link_libraries(client ${QT_LIBRARIES})

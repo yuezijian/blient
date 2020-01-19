@@ -104,7 +104,7 @@ void MainWindow::SetupUI()
 
     status->showMessage( QObject::tr( "Ready" ) );
 
-    QMainWindow::setMinimumSize( QSize( 800, 500 ) );
+    QMainWindow::setMinimumSize( QSize( 400, 500 ) );
 
     this->view_ = new WebEngineView;
 
