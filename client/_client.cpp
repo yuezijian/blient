@@ -1,7 +1,7 @@
 #include "Client.hpp"
 
 
-extern "C" Program* CreateProgram()
+extern "C" BLIENT_CLIENT__EXPORT Program* CreateProgram()
 {
     return new Client;
 }

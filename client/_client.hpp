@@ -7,12 +7,21 @@
 #define BLIENT__CLIENT__HPP
 
 
-#ifndef BLIENT_CLIENT__EXPORT
+#ifndef BLIENT_CLIENT__API
 
-    #define BLIENT_CLIENT__EXPORT
+    #if WIN32
 
-    //#define BLIENT_CLIENT__EXPORT __attribute__((visibility( "default")))
-    //#define BLIENT_CLIENT__IMPORT __attribute__((visibility( "default")))
+        #define BLIENT_CLIENT__EXPORT __declspec(dllexport)
+        #define BLIENT_CLIENT__IMPORT __declspec(dllimport)
+
+    #else
+
+        #define BLIENT_CLIENT__EXPORT __attribute__((visibility( "default")))
+        #define BLIENT_CLIENT__IMPORT __attribute__((visibility( "default")))
+
+    #endif
+
+    #define BLIENT_CLIENT__API
 
 #endif
 

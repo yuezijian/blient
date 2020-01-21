@@ -7,11 +7,11 @@
 
 int main( int argc, char* argv[] )
 {
-    QLibrary library( "client.dylib" );
+    QLibrary library( "client.dll" );
 
     if ( library.load() )
     {
-        typedef Program* ( *Function )();
+        typedef Program* ( *Function )( );
 
         auto CreateProgram = ( Function )( library.resolve( "CreateProgram" ) );
 
@@ -37,7 +37,13 @@ int main( int argc, char* argv[] )
     {
         QApplication application( argc, argv );
 
-        QMessageBox::critical( Q_NULLPTR, QObject::tr( "Error" ), QObject::tr( "This program is not correctly installed" ) );
+        QMessageBox::critical
+        (
+            Q_NULLPTR,
+            QObject::tr( "Error" ),
+            library.errorString()
+            //QObject::tr( "This program is not correctly installed" )
+        );
     }
 
     return 0;

@@ -26,10 +26,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::InstallPlugin()
 {
-    #ifdef _WIN32
+    #ifdef WIN32
 
-    QLibrary library( "../../activex/Debug/activex.dll" );
-    //QLibrary library( "../../activex/Release/activex.dll" );
+    QLibrary library( "activex.dll" );
 
     if ( library.load() )
     {
@@ -39,18 +38,18 @@ void MainWindow::InstallPlugin()
 
         if ( CreateWidget )
         {
-            QWidget* widget = CreateWidget( this->view_->page(), "ax" );
+            QWidget* widget = CreateWidget( this->view_->page(), "editor" );
 
             if ( widget )
             {
                 this->AddPluginWidget( widget );
+
+                return;
             }
         }
     }
-    else
-    {
-        QMessageBox::warning( this, QObject::tr( "Error" ), library.errorString() );
-    }
+
+    QMessageBox::warning( this, QObject::tr( "Error" ), library.errorString() );
 
     #else
 
