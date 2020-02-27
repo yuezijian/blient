@@ -9,13 +9,15 @@ set(BLIENT_CLIENT_SOURCE
         Client.cpp
         MainWindow.hpp
         MainWindow.cpp
+        WebEngineConsole.hpp
+        WebEngineConsole.cpp
         WebEnginePage.hpp
         WebEnginePage.cpp
         WebEngineView.hpp
         WebEngineView.cpp
         )
 
-add_library(client SHARED ${BLIENT_CLIENT_SOURCE})
+add_library(client SHARED ${BLIENT_CLIENT_SOURCE} ../resource/resource.qrc)
 
 target_include_directories(client PRIVATE ${PROJECT_BINARY_DIR})
 

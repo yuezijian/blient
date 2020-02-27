@@ -9,5 +9,5 @@ QVariant WebEngineChannelObject::FileOpenString( const QVariant& value )
 {
     emit AXC_Editor_FileOpenString( value.toString() );
 
-    return QVariant();
+    return QVariant( true );
 }

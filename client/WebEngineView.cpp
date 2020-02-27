@@ -5,8 +5,29 @@
 
 #include "WebEngineView.hpp"
 
-#include <QEvent>
+#include "WebEnginePage.hpp"
 
+#include <QEvent>
+#include <QFile>
+
+#include <QWebEngineProfile>
+#include <QWebEngineScript>
+#include <QWebEngineScriptCollection>
+
+
+WebEngineView::WebEngineView()
+{
+    this->page_ = new WebEnginePage;
+
+    QWebEngineView::setPage( this->page_ );
+}
+
+WebEngineView::~WebEngineView()
+{
+    delete this->page_;
+
+    this->page_ = Q_NULLPTR;
+}
 
 //bool WebEngineView::event( QEvent* event )
 //{

@@ -3,32 +3,27 @@
 //
 
 
+#include "../base/Util.hpp"
+
 #include "MainWindow.hpp"
 
 #include <QWebChannel>
-#include <QWebEngineView>
 
-//#include "WebEnginePage.hpp"
+#include "WebEngineConsole.hpp"
+#include "WebEnginePage.hpp"
 #include "WebEngineView.hpp"
 
 
 MainWindow::MainWindow()
 {
     this->SetupUI();
-}
 
-MainWindow::~MainWindow()
-{
-    //delete this->page_;
-
-    //this->page_ = Q_NULLPTR;
+    this->ToURL( "localhost:3000" );
 }
 
 void MainWindow::InstallPlugin()
 {
-    #ifdef WIN32
-
-    QLibrary library( "activex.dll" );
+    auto library = Util::Library( "activex" );
 
     if ( library.load() )
     {
@@ -50,18 +45,6 @@ void MainWindow::InstallPlugin()
     }
 
     QMessageBox::warning( this, QObject::tr( "Error" ), library.errorString() );
-
-    #else
-
-    auto label = new QLabel;
-
-    label->setAlignment( Qt::AlignCenter );
-    label->setMargin( 20 );
-    label->setText( "Windows ActiveX Control" );
-
-    this->AddPluginWidget( label );
-
-    #endif
 }
 
 void MainWindow::ToURL( const QString& address )
@@ -75,7 +58,7 @@ void MainWindow::ToURL( const QString& address )
         this->view_->setUrl( QString( "http://%1" ).arg( address ) );
     }
 
-    this->nav_address_->setText( this->view_->url().toDisplayString() );
+    this->address_->setText( this->view_->url().toDisplayString() );
 }
 
 void MainWindow::SetupUI()
@@ -89,15 +72,23 @@ void MainWindow::SetupUI()
     auto nav_forward = new QAction( QObject::tr( "Forward" ) );
     auto nav_refresh = new QAction( QObject::tr( "Refresh" ) );
 
-    this->nav_address_ = new QLineEdit;
+    this->address_ = new QLineEdit;
 
     toolbar->addAction( nav_back );
     toolbar->addAction( nav_forward );
     toolbar->addAction( nav_refresh );
 
-    toolbar->addWidget( this->nav_address_ );
+    toolbar->addWidget( this->address_ );
 
     QMainWindow::addToolBar( Qt::TopToolBarArea, toolbar );
+
+    auto splitter = new QSplitter;
+
+    this->view_ = new WebEngineView;
+
+    splitter->addWidget( this->view_ );
+
+    QMainWindow::setCentralWidget( splitter );
 
     auto status = QMainWindow::statusBar();
 
@@ -105,15 +96,44 @@ void MainWindow::SetupUI()
 
     QMainWindow::setMinimumSize( QSize( 400, 500 ) );
 
-    this->view_ = new WebEngineView;
-
     QObject::connect
     (
-        this->nav_address_, &QLineEdit::returnPressed,
-        [ = ] () { this->ToURL( this->nav_address_->text() ); }
+        this->address_, &QLineEdit::returnPressed,
+        [ = ] () { this->ToURL( this->address_->text() ); }
     );
 
-    QMainWindow::setCentralWidget( this->view_ );
+    //auto console = new WebEngineConsole;
+
+    //splitter->addWidget( console );
+
+    //
+
+    auto list = new QListWidget;
+
+    splitter->addWidget( list );
+
+    QObject::connect
+        (
+            this->view_->Page(), &WebEnginePage::JavaScriptConsoleMessage,
+            [ = ]
+                (
+                    QWebEnginePage::JavaScriptConsoleMessageLevel level,
+                    const QString& message,
+                    int line_number,
+                    const QString& source_id
+                )
+            {
+                //std::cout << level << " " << line_number << std::endl;
+
+                list->addItem( message );
+            }
+        );
+
+    QObject::connect
+        (
+            this->view_, &WebEngineView::loadStarted,
+            [ = ] { list->clear(); }
+        );
 }
 
 void MainWindow::AddPluginWidget( QWidget* widget )

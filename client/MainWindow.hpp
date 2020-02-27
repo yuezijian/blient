@@ -10,7 +10,6 @@
 #include <QtWidgets>
 
 
-//class WebEnginePage;
 class WebEngineView;
 
 
@@ -20,7 +19,6 @@ Q_OBJECT
 
 public:
     MainWindow();
-    ~MainWindow();
 
     void InstallPlugin();
 
@@ -32,9 +30,7 @@ private:
     void AddPluginWidget( QWidget* widget );
 
 private:
-    QLineEdit* nav_address_ = Q_NULLPTR;
-
-    //WebEnginePage* page_ = Q_NULLPTR;
+    QLineEdit* address_ = Q_NULLPTR;
 
     WebEngineView* view_ = Q_NULLPTR;
 };

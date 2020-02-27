@@ -1,17 +1,17 @@
 #include <QApplication>
 #include <QMessageBox>
-#include <QLibrary>
 
 #include "../base/Program.hpp"
+#include "../base/Util.hpp"
 
 
 int main( int argc, char* argv[] )
 {
-    QLibrary library( "client.dll" );
+    auto library = Util::Library( "client" );
 
     if ( library.load() )
     {
-        typedef Program* ( *Function )( );
+        typedef Program* ( *Function )();
 
         auto CreateProgram = ( Function )( library.resolve( "CreateProgram" ) );
 
@@ -42,7 +42,6 @@ int main( int argc, char* argv[] )
             Q_NULLPTR,
             QObject::tr( "Error" ),
             library.errorString()
-            //QObject::tr( "This program is not correctly installed" )
         );
     }
 

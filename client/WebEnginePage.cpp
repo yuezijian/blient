@@ -4,6 +4,8 @@
 
 #include "WebEnginePage.hpp"
 
+#include <QFile>
+
 
 void WebEnginePage::javaScriptConsoleMessage( QWebEnginePage::JavaScriptConsoleMessageLevel level, const QString& message, int line_number, const QString& source_id )
 {

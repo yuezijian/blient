@@ -3,15 +3,21 @@
 //
 
 
+#include <QDebug>
+
 #include <QtWidgets/QtWidgets>
 
-#include <ActiveQt/QAxWidget>
-
-#include <QWebEnginePage>
-#include <QWebChannel>
+//#include <QWebEnginePage>
+//#include <QWebChannel>
 
 #include "WebEngineChannelObject.hpp"
 
+#include "AxWidget.hpp"
+
+
+#ifdef WIN32
+
+#include <ActiveQt/QAxWidget>
 
 class AxWidgetEditor : public QAxWidget
 {
@@ -27,9 +33,15 @@ protected:
     //}
 };
 
+#endif
+
+
+
 
 extern "C" Q_DECL_EXPORT QWidget* CreateWidget( QWebEnginePage* page, const QString& name )
 {
+    #ifdef WIN32
+
     auto ax_widget = new AxWidgetEditor;
 
     if ( !ax_widget->isNull() )
@@ -46,13 +58,35 @@ extern "C" Q_DECL_EXPORT QWidget* CreateWidget( QWebEnginePage* page, const QStr
         (
             object, &WebEngineChannelObject::AXC_Editor_FileOpenString,
             [ = ] ( const QString& content )
-        {
-            auto function = "ExecuteCommand( const QString&, bool, const QString& )";
+            {
+                auto function = "ExecuteCommand( const QString&, bool, const QString& )";
 
-            ax_widget->dynamicCall( function, "FileOpenString", false, content );
-        }
+                ax_widget->dynamicCall( function, "FileOpenString", false, content );
+            }
         );
     }
 
     return ax_widget;
+
+    #else
+
+    auto ax_widget = new AxWidget;
+
+    auto channel = new QWebChannel;
+
+    channel->registerObject( name, ax_widget->ChannelObject() );
+
+    page->setWebChannel( channel );
+
+    return ax_widget;
+
+    //auto label = new QLabel;
+    //
+    //label->setAlignment( Qt::AlignCenter );
+    //label->setMargin( 20 );
+    //label->setText( "Windows ActiveX Control" );
+    //
+    //return label;
+
+    #endif
 }
