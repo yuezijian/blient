@@ -8,7 +8,6 @@
 #include "WebEnginePage.hpp"
 
 #include <QEvent>
-#include <QFile>
 
 #include <QWebEngineProfile>
 #include <QWebEngineScript>
@@ -29,35 +28,52 @@ WebEngineView::~WebEngineView()
     this->page_ = Q_NULLPTR;
 }
 
-//bool WebEngineView::event( QEvent* event )
+//void WebEngineView::mousePressEvent( QMouseEvent* event )
 //{
-//    if ( event->type() == QEvent::ChildAdded )
-//    {
-//        auto ce = dynamic_cast< QChildEvent* >( event );
+//    qDebug() << "WebEngineView::mousePressEvent";
 //
-//        if ( ce )
-//        {
-//            ce->child()->installEventFilter( this );
-//        }
-//    }
-//    else if ( event->type() == QEvent::ChildRemoved )
-//    {
-//        auto ce = dynamic_cast< QChildEvent* >( event );
-//
-//        if ( ce )
-//        {
-//            ce->child()->removeEventFilter( this );
-//        }
-//    }
-//
-//    return QWebEngineView::event( event );
+//    QWidget::mousePressEvent( event );
 //}
 
-//bool WebEngineView::eventFilter( QObject* object, QEvent* event )
-//{
-//    if ( event->type() == QEvent::MouseButtonPress )
-//    {
-//    }
-//
-//    return QWebEngineView::eventFilter( object, event );
-//}
+bool WebEngineView::event( QEvent* event )
+{
+    if ( event->type() == QEvent::ChildAdded )
+    {
+        auto ce = dynamic_cast< QChildEvent* >( event );
+
+        if ( ce )
+        {
+            auto child = ce->child();
+
+            auto widget = qobject_cast< QWidget* >( child );
+
+            if ( widget )
+            {
+                widget->installEventFilter( this );
+            }
+        }
+    }
+    //else if ( event->type() == QEvent::ChildRemoved )
+    //{
+    //    auto ce = dynamic_cast< QChildEvent* >( event );
+    //
+    //    if ( ce )
+    //    {
+    //        auto child = ce->child();
+    //
+    //        qDebug() << "Remove " << child->metaObject()->className();
+    //    }
+    //}
+
+    return QWebEngineView::event( event );
+}
+
+bool WebEngineView::eventFilter( QObject* object, QEvent* event )
+{
+    if ( event->type() == QEvent::MouseButtonPress )
+    {
+        qDebug() << "Mouse Press";
+    }
+
+    return QWebEngineView::eventFilter( object, event );
+}

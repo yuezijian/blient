@@ -37,7 +37,7 @@ void MainWindow::InstallPlugin()
 
             if ( widget )
             {
-                this->AddPluginWidget( widget );
+                this->AddAssistWidget( "ActiveX", widget );
 
                 return;
             }
@@ -63,10 +63,10 @@ void MainWindow::ToURL( const QString& address )
 
 void MainWindow::SetupUI()
 {
-    auto toolbar = new QToolBar();
+    this->toolbar_ = new QToolBar();
 
-    toolbar->setFloatable( false );
-    toolbar->setMovable( false );
+    this->toolbar_->setFloatable( false );
+    this->toolbar_->setMovable( false );
 
     auto nav_back    = new QAction( QObject::tr( "Back"    ) );
     auto nav_forward = new QAction( QObject::tr( "Forward" ) );
@@ -74,21 +74,17 @@ void MainWindow::SetupUI()
 
     this->address_ = new QLineEdit;
 
-    toolbar->addAction( nav_back );
-    toolbar->addAction( nav_forward );
-    toolbar->addAction( nav_refresh );
+    this->toolbar_->addAction( nav_back );
+    this->toolbar_->addAction( nav_forward );
+    this->toolbar_->addAction( nav_refresh );
 
-    toolbar->addWidget( this->address_ );
+    this->toolbar_->addWidget( this->address_ );
 
-    QMainWindow::addToolBar( Qt::TopToolBarArea, toolbar );
-
-    auto splitter = new QSplitter;
+    QMainWindow::addToolBar( Qt::TopToolBarArea, this->toolbar_ );
 
     this->view_ = new WebEngineView;
 
-    splitter->addWidget( this->view_ );
-
-    QMainWindow::setCentralWidget( splitter );
+    QMainWindow::setCentralWidget( this->view_ );
 
     auto status = QMainWindow::statusBar();
 
@@ -102,15 +98,9 @@ void MainWindow::SetupUI()
         [ = ] () { this->ToURL( this->address_->text() ); }
     );
 
-    //auto console = new WebEngineConsole;
-
-    //splitter->addWidget( console );
-
-    //
-
     auto list = new QListWidget;
 
-    splitter->addWidget( list );
+    this->AddAssistWidget( "Console", list );
 
     QObject::connect
         (
@@ -123,8 +113,6 @@ void MainWindow::SetupUI()
                     const QString& source_id
                 )
             {
-                //std::cout << level << " " << line_number << std::endl;
-
                 list->addItem( message );
             }
         );
@@ -136,14 +124,16 @@ void MainWindow::SetupUI()
         );
 }
 
-void MainWindow::AddPluginWidget( QWidget* widget )
+void MainWindow::AddAssistWidget( const QString& title, QWidget* widget )
 {
-    //auto dock = new QDockWidget;
+    auto dock = new QDockWidget( title );
 
-    //dock->setWidget( widget );
+    dock->setWidget( widget );
 
-    //QMainWindow::addDockWidget( Qt::RightDockWidgetArea, dock );
+    QMainWindow::addDockWidget( Qt::RightDockWidgetArea, dock );
 
-    widget->setWindowFlags( Qt::Window );
-    widget->show();
+    this->toolbar_->addAction( dock->toggleViewAction() );
+
+    //widget->setWindowFlags( Qt::Window );
+    //widget->show();
 }

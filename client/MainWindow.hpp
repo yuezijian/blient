@@ -3,8 +3,8 @@
 //
 
 
-#ifndef MAIN_WINDOW__HPP
-#define MAIN_WINDOW__HPP
+#ifndef BLIENT__CLIENT__MAIN_WINDOW__HPP
+#define BLIENT__CLIENT__MAIN_WINDOW__HPP
 
 
 #include <QtWidgets>
@@ -27,9 +27,11 @@ public:
 private:
     void SetupUI();
 
-    void AddPluginWidget( QWidget* widget );
+    void AddAssistWidget( const QString& title, QWidget* widget );
 
 private:
+    QToolBar* toolbar_ = Q_NULLPTR;
+
     QLineEdit* address_ = Q_NULLPTR;
 
     WebEngineView* view_ = Q_NULLPTR;

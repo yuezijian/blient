@@ -3,8 +3,8 @@
 //
 
 
-#ifndef WEB_ENGINE_PAGE__HPP
-#define WEB_ENGINE_PAGE__HPP
+#ifndef BLIENT__CLIENT__WEB_ENGINE_PAGE__HPP
+#define BLIENT__CLIENT__WEB_ENGINE_PAGE__HPP
 
 
 #include <QWebEnginePage>
