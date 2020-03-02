@@ -7,6 +7,13 @@
 
 #include <QFile>
 
+#include <QWebChannel>
+
+
+WebEnginePage::WebEnginePage()
+{
+    QWebEnginePage::setWebChannel( new QWebChannel );
+}
 
 void WebEnginePage::javaScriptConsoleMessage( QWebEnginePage::JavaScriptConsoleMessageLevel level, const QString& message, int line_number, const QString& source_id )
 {

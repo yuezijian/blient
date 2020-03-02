@@ -22,7 +22,7 @@ Q_OBJECT
 Q_SIGNALS:
     void OnPropertyChange( const QString& );
 
-    // 来自前台页面的 JS 调用
+    // 来自前台业务的 JS 调用
 
 public Q_SLOTS:
     QVariant FileOpenString( const QVariant& value );

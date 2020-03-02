@@ -17,6 +17,9 @@ class WebEnginePage : public QWebEnginePage
 {
 Q_OBJECT
 
+public:
+    WebEnginePage();
+
 Q_SIGNALS:
     void JavaScriptConsoleMessage
         (

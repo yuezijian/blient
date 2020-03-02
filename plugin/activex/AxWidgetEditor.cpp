@@ -1,5 +1,5 @@
 //
-// Created by ÔÀ×Ó½£ on 2019/03/01.
+// Created by å²³å­å‰‘ on 2019/03/01.
 //
 
 
@@ -18,13 +18,11 @@ AxWidgetEditor::AxWidgetEditor() :
 
 void AxWidgetEditor::Attach( QWebEnginePage* page, const QString& name )
 {
-    auto channel = new QWebChannel;
+    auto channel = page->webChannel();
 
     auto object = new WebEngineChannelObject;
 
     channel->registerObject( name, object );
-
-    page->setWebChannel( channel );
 
     auto function = [ = ] ( const QString& content )
     {
