@@ -5,23 +5,84 @@
 
 #include "WebEngineConsole.hpp"
 
+#include "WebEnginePage.hpp"
+#include "WebEngineView.hpp"
 
-WebEngineConsole::WebEngineConsole()
+
+WebEngineConsole::WebEngineConsole( WebEngineView* view )
 {
-    auto layout = new QHBoxLayout;
+    //auto toolbar = new QToolBar;
+    //
+    //toolbar->setMovable( false );
+    //
+    //QMainWindow::addToolBar( toolbar );
+    //
+    //auto ac = new QAction( QObject::tr( "ac" ) );
+    //
+    //toolbar->addAction( ac );
 
-    auto splitter = new QSplitter( Qt::Vertical );
+    auto model = new QStandardItemModel;
 
-    auto list = new QListWidget;
+    auto list = new QListView;
 
-    auto button = new QPushButton( "Test" );
+    list->setModel( model );
+    list->setWordWrap( true );
 
-    layout->addWidget( splitter );
+    //list->setItemDelegate();
 
-    layout->setMargin( 0 );
+    QMainWindow::setCentralWidget( list );
 
-    splitter->addWidget( button );
-    splitter->addWidget( list );
+    auto function = [ = ]
+        (
+            QWebEnginePage::JavaScriptConsoleMessageLevel level,
+            const QString& message,
+            int line_number,
+            const QString& source_id
+        )
+    {
+        auto item = new QStandardItem;
 
-    QWidget::setLayout( layout );
+        switch ( level )
+        {
+            case QWebEnginePage::WarningMessageLevel:
+            {
+                item->setBackground( QColor( "#FFFBE5" ) );
+                item->setForeground( QColor( "#5D3C00" ) );
+
+                break;
+            }
+            case QWebEnginePage::ErrorMessageLevel:
+            {
+                item->setBackground( QColor( "#FFF0F0" ) );
+                item->setForeground( QColor( "#FF0000" ) );
+
+                break;
+            }
+            default:
+                ;
+        }
+
+        auto text = message;
+
+        if ( !source_id.isEmpty() )
+        {
+            text += QString( "\n%1:%2" ).arg( source_id ).arg( line_number );;
+        }
+
+        item->setText( text );
+
+        model->appendRow( item );
+    };
+
+    QObject::connect
+        (
+            view->Page(), &WebEnginePage::JavaScriptConsoleMessage,
+            function
+        );
+
+    QObject::connect
+        (
+            view, &WebEngineView::loadStarted,
+            [ = ] { model->clear(); }
+        );
 }

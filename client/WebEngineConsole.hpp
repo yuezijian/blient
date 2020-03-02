@@ -10,10 +10,13 @@
 #include <QtWidgets>
 
 
-class WebEngineConsole : public QWidget
+class WebEngineView;
+
+
+class WebEngineConsole : public QMainWindow
 {
 public:
-    WebEngineConsole();
+    explicit WebEngineConsole( WebEngineView* view );
 };
 
 

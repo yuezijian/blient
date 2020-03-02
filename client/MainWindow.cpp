@@ -18,7 +18,7 @@ MainWindow::MainWindow()
 {
     this->SetupUI();
 
-    //this->ToURL( "localhost:3000" );
+    this->ToURL( "localhost:3000" );
     //this->ToURL( "192.168.1.7:3000" );
 }
 
@@ -105,30 +105,9 @@ void MainWindow::SetupUI()
         [ = ] () { this->ToURL( this->address_->text() ); }
     );
 
-    //auto list = new QListWidget;
+    auto console = new WebEngineConsole( this->view_ );
 
-    //QObject::connect
-    //(
-    //    this->view_->Page(), &WebEnginePage::JavaScriptConsoleMessage,
-    //    [ = ]
-    //(
-    //    QWebEnginePage::JavaScriptConsoleMessageLevel level,
-    //    const QString& message,
-    //    int line_number,
-    //    const QString& source_id
-    //    )
-    //{
-    //    list->addItem( message );
-    //}
-    //);
-
-    //QObject::connect
-    //(
-    //    this->view_, &WebEngineView::loadStarted,
-    //    [ = ] { list->clear(); }
-    //);
-
-    //this->AddAssistWidget( "Console", list );
+    this->AddAssistWidget( QObject::tr( "Console" ), console );
 }
 
 void MainWindow::AddAssistWidget( const QString& title, QWidget* widget )
