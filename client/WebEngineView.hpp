@@ -27,8 +27,6 @@ public:
     }
 
 protected:
-    //void mousePressEvent( QMouseEvent* event ) override;
-
     bool event( QEvent* event ) override;
 
     bool eventFilter( QObject* object, QEvent* event ) override;

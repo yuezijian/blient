@@ -3,39 +3,13 @@
 //
 
 
-#include <QDebug>
-
 #include <QtWidgets/QtWidgets>
 
-//#include <QWebEnginePage>
-//#include <QWebChannel>
-
-#include "WebEngineChannelObject.hpp"
-
-#include "AxWidget.hpp"
-
-
 #ifdef WIN32
-
-#include <ActiveQt/QAxWidget>
-
-class AxWidgetEditor : public QAxWidget
-{
-public:
-    AxWidgetEditor() : QAxWidget( "{6F54E999-11EF-45DC-9E58-2858314C7016}" )
-    {
-    }
-
-protected:
-    //bool translateKeyEvent( int message, int keycode ) const override
-    //{
-    //    return QAxWidget::translateKeyEvent( message, keycode );
-    //}
-};
-
+#include "AxWidgetEditor.hpp"
+#else
+#include "AxWidget.hpp"
 #endif
-
-
 
 
 extern "C" Q_DECL_EXPORT QWidget* CreateWidget( QWebEnginePage* page, const QString& name )
@@ -44,27 +18,18 @@ extern "C" Q_DECL_EXPORT QWidget* CreateWidget( QWebEnginePage* page, const QStr
 
     auto ax_widget = new AxWidgetEditor;
 
-    if ( !ax_widget->isNull() )
+    if ( ax_widget->isNull() )
     {
-        auto channel = new QWebChannel;
+        auto label = new QLabel;
 
-        auto object = new WebEngineChannelObject;
+        label->setAlignment( Qt::AlignCenter );
+        label->setMargin( 20 );
+        label->setText( QString( QObject::tr( "Plugin [ %1 ] not found" ) ).arg( name ) );
 
-        channel->registerObject( name, object );
-
-        page->setWebChannel( channel );
-
-        QObject::connect
-        (
-            object, &WebEngineChannelObject::AXC_Editor_FileOpenString,
-            [ = ] ( const QString& content )
-            {
-                auto function = "ExecuteCommand( const QString&, bool, const QString& )";
-
-                ax_widget->dynamicCall( function, "FileOpenString", false, content );
-            }
-        );
+        return label;
     }
+
+    ax_widget->Attach( page, name );
 
     return ax_widget;
 

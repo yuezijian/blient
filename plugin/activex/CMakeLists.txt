@@ -7,7 +7,7 @@ set(BLIENT_ACTIVEX_SOURCE
         )
 
 if(WIN32)
-    list(APPEND BLIENT_ACTIVEX_SOURCE AxWidgetEditor.hpp)
+    list(APPEND BLIENT_ACTIVEX_SOURCE AxWidgetEditor.hpp AxWidgetEditor.cpp)
 else()
     list(APPEND BLIENT_ACTIVEX_SOURCE AxWidget.hpp)
 endif()

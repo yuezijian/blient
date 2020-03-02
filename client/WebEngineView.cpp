@@ -28,13 +28,6 @@ WebEngineView::~WebEngineView()
     this->page_ = Q_NULLPTR;
 }
 
-//void WebEngineView::mousePressEvent( QMouseEvent* event )
-//{
-//    qDebug() << "WebEngineView::mousePressEvent";
-//
-//    QWidget::mousePressEvent( event );
-//}
-
 bool WebEngineView::event( QEvent* event )
 {
     if ( event->type() == QEvent::ChildAdded )
@@ -53,26 +46,15 @@ bool WebEngineView::event( QEvent* event )
             }
         }
     }
-    //else if ( event->type() == QEvent::ChildRemoved )
-    //{
-    //    auto ce = dynamic_cast< QChildEvent* >( event );
-    //
-    //    if ( ce )
-    //    {
-    //        auto child = ce->child();
-    //
-    //        qDebug() << "Remove " << child->metaObject()->className();
-    //    }
-    //}
 
     return QWebEngineView::event( event );
 }
 
 bool WebEngineView::eventFilter( QObject* object, QEvent* event )
 {
-    if ( event->type() == QEvent::MouseButtonPress )
+    if ( event->type() == QEvent::FocusIn )
     {
-        qDebug() << "Mouse Press";
+        QWebEngineView::update();
     }
 
     return QWebEngineView::eventFilter( object, event );

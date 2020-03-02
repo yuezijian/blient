@@ -3,34 +3,25 @@
 //
 
 
-#ifndef BLIENT__PLUGIN__ACTIVEX__EDITOR__HPP
-#define BLIENT__PLUGIN__ACTIVEX__EDITOR__HPP
-
-
-#include <QtWidgets/QtWidgets>
-
-
-#include <QWebEnginePage>
-#include <QWebChannel>
-
-#include "WebEngineChannelObject.hpp"
+#ifndef BLIENT__PLUGIN__ACTIVEX__AX_WIDGET_EDITOR__HPP
+#define BLIENT__PLUGIN__ACTIVEX__AX_WIDGET_EDITOR__HPP
 
 
 #include <ActiveQt/QAxWidget>
 
 
+class QWebEnginePage;
+
+
 class AxWidgetEditor : public QAxWidget
 {
 public:
-    AxWidgetEditor() : QAxWidget( "{6F54E999-11EF-45DC-9E58-2858314C7016}" )
-    {
-    }
+    AxWidgetEditor();
+
+    void Attach( QWebEnginePage* page, const QString& name );
 
 protected:
-    //bool translateKeyEvent( int message, int keycode ) const override
-    //{
-    //    return QAxWidget::translateKeyEvent( message, keycode );
-    //}
+    bool translateKeyEvent( int message, int keycode ) const override;
 };
 
 

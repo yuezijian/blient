@@ -18,7 +18,8 @@ MainWindow::MainWindow()
 {
     this->SetupUI();
 
-    this->ToURL( "localhost:3000" );
+    //this->ToURL( "localhost:3000" );
+    //this->ToURL( "192.168.1.7:3000" );
 }
 
 void MainWindow::InstallPlugin()
@@ -37,7 +38,9 @@ void MainWindow::InstallPlugin()
 
             if ( widget )
             {
-                this->AddAssistWidget( "ActiveX", widget );
+                //widget->setMinimumWidth( 850 );
+
+                this->AddAssistWidget( "Editor", widget );
 
                 return;
             }
@@ -72,6 +75,10 @@ void MainWindow::SetupUI()
     auto nav_forward = new QAction( QObject::tr( "Forward" ) );
     auto nav_refresh = new QAction( QObject::tr( "Refresh" ) );
 
+    nav_back->setDisabled( true );
+    nav_forward->setDisabled( true );
+    nav_refresh->setDisabled( true );
+
     this->address_ = new QLineEdit;
 
     this->toolbar_->addAction( nav_back );
@@ -98,30 +105,30 @@ void MainWindow::SetupUI()
         [ = ] () { this->ToURL( this->address_->text() ); }
     );
 
-    auto list = new QListWidget;
+    //auto list = new QListWidget;
 
-    this->AddAssistWidget( "Console", list );
+    //QObject::connect
+    //(
+    //    this->view_->Page(), &WebEnginePage::JavaScriptConsoleMessage,
+    //    [ = ]
+    //(
+    //    QWebEnginePage::JavaScriptConsoleMessageLevel level,
+    //    const QString& message,
+    //    int line_number,
+    //    const QString& source_id
+    //    )
+    //{
+    //    list->addItem( message );
+    //}
+    //);
 
-    QObject::connect
-        (
-            this->view_->Page(), &WebEnginePage::JavaScriptConsoleMessage,
-            [ = ]
-                (
-                    QWebEnginePage::JavaScriptConsoleMessageLevel level,
-                    const QString& message,
-                    int line_number,
-                    const QString& source_id
-                )
-            {
-                list->addItem( message );
-            }
-        );
+    //QObject::connect
+    //(
+    //    this->view_, &WebEngineView::loadStarted,
+    //    [ = ] { list->clear(); }
+    //);
 
-    QObject::connect
-        (
-            this->view_, &WebEngineView::loadStarted,
-            [ = ] { list->clear(); }
-        );
+    //this->AddAssistWidget( "Console", list );
 }
 
 void MainWindow::AddAssistWidget( const QString& title, QWidget* widget )
@@ -133,7 +140,4 @@ void MainWindow::AddAssistWidget( const QString& title, QWidget* widget )
     QMainWindow::addDockWidget( Qt::RightDockWidgetArea, dock );
 
     this->toolbar_->addAction( dock->toggleViewAction() );
-
-    //widget->setWindowFlags( Qt::Window );
-    //widget->show();
 }
