@@ -1,10 +1,10 @@
 //
-// Created by 岳子剑 on 2019/02/12.
+// Created by 岳子剑 on 2020/03/03.
 //
 
 
-#ifndef BLIENT__PLUGIN__ACTIVEX__AX_WIDGET_EDITOR__HPP
-#define BLIENT__PLUGIN__ACTIVEX__AX_WIDGET_EDITOR__HPP
+#ifndef BLIENT__PLUGIN__ACTIVEX__AX_WIDGET_REPORT__HPP
+#define BLIENT__PLUGIN__ACTIVEX__AX_WIDGET_REPORT__HPP
 
 
 #include <ActiveQt/QAxWidget>
@@ -13,12 +13,12 @@
 class QWebEnginePage;
 
 
-class AxWidgetEditor : public QAxWidget
+class AxWidgetReport : public QAxWidget
 {
-    friend class AxChannelEditor;
+    friend class AxChannelReport;
 
 public:
-    AxWidgetEditor();
+    AxWidgetReport();
 
     void Attach( QWebEnginePage* page, const QString& name );
 

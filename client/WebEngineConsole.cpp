@@ -79,10 +79,4 @@ WebEngineConsole::WebEngineConsole( WebEngineView* view )
             view->Page(), &WebEnginePage::JavaScriptConsoleMessage,
             function
         );
-
-    QObject::connect
-        (
-            view, &WebEngineView::loadStarted,
-            [ = ] { model->clear(); }
-        );
 }

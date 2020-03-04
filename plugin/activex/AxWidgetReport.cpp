@@ -3,34 +3,34 @@
 //
 
 
-#include "AxWidgetEditor.hpp"
+#include "AxWidgetReport.hpp"
 
 #include <QWebEnginePage>
 #include <QWebChannel>
 
-#include "AxChannelEditor.hpp"
+#include "AxChannelReport.hpp"
 
 
-AxWidgetEditor::AxWidgetEditor() :
-    QAxWidget( "{6F54E999-11EF-45DC-9E58-2858314C7016}" )
+AxWidgetReport::AxWidgetReport() :
+    QAxWidget( "{600CD6D9-EBE1-42cb-B8DF-DFB81977122E}" )
 {
 }
 
-void AxWidgetEditor::Attach( QWebEnginePage* page, const QString& name )
+void AxWidgetReport::Attach( QWebEnginePage* page, const QString& name )
 {
     auto channel = page->webChannel();
 
-    auto object = new AxChannelEditor( this );
+    auto object = new AxChannelReport( this );
 
     channel->registerObject( name, object );
 }
 
-bool AxWidgetEditor::translateKeyEvent( int message, int keycode ) const
+bool AxWidgetReport::translateKeyEvent( int message, int keycode ) const
 {
     return QAxWidget::translateKeyEvent( message, keycode );
 }
 
-QVariant AxWidgetEditor::FileOpenString( const QVariant& value )
+QVariant AxWidgetReport::FileOpenString( const QVariant& value )
 {
     auto command = "ExecuteCommand( const QString&, bool, const QString& )";
 

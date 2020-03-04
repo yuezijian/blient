@@ -11,9 +11,15 @@
 #include <QVariant>
 
 
+class AxWidgetEditor;
+
+
 class WebEngineChannelObject : public QObject
 {
 Q_OBJECT
+
+public:
+    explicit WebEngineChannelObject( AxWidgetEditor* editor );
 
     // 调用前台页面的 JS 逻辑
 
@@ -22,15 +28,15 @@ Q_OBJECT
 Q_SIGNALS:
     void OnPropertyChange( const QString& );
 
+public Q_SLOTS:
+
     // 来自前台业务的 JS 调用
 
-public Q_SLOTS:
     QVariant FileOpenString( const QVariant& value );
 
-Q_SIGNALS:
-    void AXC_Editor_FileOpenString( const QString& content );
-
 private:
+    AxWidgetEditor* editor_ = Q_NULLPTR;
+
     QString my_property_;
 };
 

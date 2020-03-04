@@ -7,6 +7,7 @@
 
 #ifdef WIN32
 #include "AxWidgetEditor.hpp"
+//#include "AxWidgetReport.hpp"
 #else
 #include "AxWidget.hpp"
 #endif
@@ -17,6 +18,7 @@ extern "C" Q_DECL_EXPORT QWidget* CreateWidget( QWebEnginePage* page, const QStr
     #ifdef WIN32
 
     auto ax_widget = new AxWidgetEditor;
+    //auto ax_widget = new AxWidgetReport;
 
     if ( ax_widget->isNull() )
     {

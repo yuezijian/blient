@@ -1,3 +1,7 @@
+#ifdef WIN32
+#include <atlbase.h>
+#endif
+
 #include <QApplication>
 #include <QMessageBox>
 
@@ -5,8 +9,28 @@
 #include "../base/Util.hpp"
 
 
+#ifdef WIN32
+int APIENTRY wWinMain
+(
+    _In_     HINSTANCE hInstance,
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_     LPWSTR    lpCmdLine,
+    _In_     int       nCmdShow
+)
+{
+    int   argc   = 1;
+    char* argv[] = { "" };
+
+    //ATLASSERT( SUCCEEDED( CoInitialize( NULL ) ) );
+
+    //CComModule module;
+
+    //module.Init( 0, hInstance );
+#else
 int main( int argc, char* argv[] )
 {
+#endif
+
     auto library = Util::Library( "client" );
 
     if ( library.load() )

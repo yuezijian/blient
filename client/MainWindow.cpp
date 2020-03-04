@@ -18,8 +18,8 @@ MainWindow::MainWindow()
 {
     this->SetupUI();
 
-    this->ToURL( "localhost:3000" );
-    //this->ToURL( "192.168.1.7:3000" );
+    //this->ToURL( "localhost:3000" );
+    this->ToURL( "192.168.1.7:3000" );
 }
 
 void MainWindow::InstallPlugin()
@@ -35,12 +35,13 @@ void MainWindow::InstallPlugin()
         if ( CreateWidget )
         {
             QWidget* widget = CreateWidget( this->view_->page(), "editor" );
+            //QWidget* widget = CreateWidget( this->view_->page(), "report" );
 
             if ( widget )
             {
                 //widget->setMinimumWidth( 850 );
 
-                this->AddAssistWidget( "Editor", widget );
+                this->AddAssistWidget( "Report", widget );
 
                 return;
             }
@@ -112,6 +113,8 @@ void MainWindow::SetupUI()
 
 void MainWindow::AddAssistWidget( const QString& title, QWidget* widget )
 {
+    //widget->show();
+
     auto dock = new QDockWidget( title );
 
     dock->setWidget( widget );

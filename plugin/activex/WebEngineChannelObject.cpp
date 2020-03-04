@@ -5,10 +5,14 @@
 
 #include "WebEngineChannelObject.hpp"
 
+#include "AxWidgetEditor.hpp"
+
+
+WebEngineChannelObject::WebEngineChannelObject( AxWidgetEditor* editor ) : editor_( editor )
+{
+}
 
 QVariant WebEngineChannelObject::FileOpenString( const QVariant& value )
 {
-    emit AXC_Editor_FileOpenString( value.toString() );
-
-    return QVariant( true );
+    return this->editor_->FileOpenString( value.toString() );
 }
