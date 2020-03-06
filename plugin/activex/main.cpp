@@ -5,22 +5,24 @@
 
 #include <QtWidgets/QtWidgets>
 
+#include <QWebChannel>
+#include <QWebEnginePage>
+
 #ifdef WIN32
+#include "AxChannelEditor.hpp"
+#include "AxChannelReport.hpp"
 #include "AxWidgetEditor.hpp"
-//#include "AxWidgetReport.hpp"
+#include "AxWidgetReport.hpp"
 #else
 #include "AxWidget.hpp"
 #endif
 
 
-extern "C" Q_DECL_EXPORT QWidget* CreateWidget( QWebEnginePage* page, const QString& name )
+QWidget* CreateWidget( QAxWidget* widget, QObject* object, QWebEnginePage* page, const QString& name )
 {
     #ifdef WIN32
 
-    auto ax_widget = new AxWidgetEditor;
-    //auto ax_widget = new AxWidgetReport;
-
-    if ( ax_widget->isNull() )
+    if ( widget->isNull() )
     {
         auto label = new QLabel;
 
@@ -31,9 +33,9 @@ extern "C" Q_DECL_EXPORT QWidget* CreateWidget( QWebEnginePage* page, const QStr
         return label;
     }
 
-    ax_widget->Attach( page, name );
+    page->webChannel()->registerObject( name, object );
 
-    return ax_widget;
+    return widget;
 
     #else
 
@@ -56,4 +58,20 @@ extern "C" Q_DECL_EXPORT QWidget* CreateWidget( QWebEnginePage* page, const QStr
     //return label;
 
     #endif
+}
+
+extern "C" Q_DECL_EXPORT QWidget* CreateWidgetEditor( QWebEnginePage* page, const QString& name )
+{
+    auto widget  = new AxWidgetEditor;
+    auto channel = new AxChannelEditor( widget );
+
+    return CreateWidget( widget, channel, page, name );
+}
+
+extern "C" Q_DECL_EXPORT QWidget* CreateWidgetReport( QWebEnginePage* page, const QString& name )
+{
+    auto widget  = new AxWidgetReport;
+    auto channel = new AxChannelReport( widget );
+
+    return CreateWidget( widget, channel, page, name );
 }

@@ -20,13 +20,11 @@ class AxWidgetEditor : public QAxWidget
 public:
     AxWidgetEditor();
 
-    void Attach( QWebEnginePage* page, const QString& name );
-
 protected:
     bool translateKeyEvent( int message, int keycode ) const override;
 
 private:
-    QVariant FileOpenString( const QVariant& value );
+    QVariant ExecuteCommand( const QString& command, bool ui, const QVariant& value );
 };
 
 

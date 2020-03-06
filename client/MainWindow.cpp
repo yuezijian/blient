@@ -19,7 +19,7 @@ MainWindow::MainWindow()
     this->SetupUI();
 
     //this->ToURL( "localhost:3000" );
-    this->ToURL( "192.168.1.7:3000" );
+    //this->ToURL( "192.168.1.7:3000" );
 }
 
 void MainWindow::InstallPlugin()
@@ -30,25 +30,37 @@ void MainWindow::InstallPlugin()
     {
         typedef QWidget* ( *Function )( QWebEnginePage*, const QString& );
 
-        auto CreateWidget = ( Function )( library.resolve( "CreateWidget" ) );
-
-        if ( CreateWidget )
         {
-            QWidget* widget = CreateWidget( this->view_->page(), "editor" );
-            //QWidget* widget = CreateWidget( this->view_->page(), "report" );
+            auto CreateWidget = ( Function )( library.resolve( "CreateWidgetEditor" ) );
 
-            if ( widget )
+            if ( CreateWidget )
             {
-                //widget->setMinimumWidth( 850 );
+                QWidget* widget = CreateWidget( this->view_->page(), "editor" );
 
-                this->AddAssistWidget( "Report", widget );
-
-                return;
+                if ( widget )
+                {
+                    this->AddAssistWidget( "Editor", widget );
+                }
             }
         }
+        {
+            auto CreateWidget = ( Function )( library.resolve( "CreateWidgetReport" ) );
+
+            if ( CreateWidget )
+            {
+                QWidget* widget = CreateWidget( this->view_->page(), "report" );
+
+                if ( widget )
+                {
+                    this->AddAssistWidget( "Report", widget );
+                }
+            }
+        }
+
+        return;
     }
 
-    QMessageBox::warning( this, QObject::tr( "Error" ), library.errorString() );
+    QMessageBox::warning( this, QObject::tr( "Warning" ), library.errorString() );
 }
 
 void MainWindow::ToURL( const QString& address )
@@ -111,8 +123,10 @@ void MainWindow::SetupUI()
     this->AddAssistWidget( QObject::tr( "Console" ), console );
 }
 
-void MainWindow::AddAssistWidget( const QString& title, QWidget* widget )
+void MainWindow::AddAssistWidget( const QString& title, QWidget* widget, int width )
 {
+    widget->setMaximumWidth( 850 );
+
     //widget->show();
 
     auto dock = new QDockWidget( title );

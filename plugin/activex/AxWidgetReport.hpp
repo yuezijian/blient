@@ -20,13 +20,14 @@ class AxWidgetReport : public QAxWidget
 public:
     AxWidgetReport();
 
-    void Attach( QWebEnginePage* page, const QString& name );
-
 protected:
     bool translateKeyEvent( int message, int keycode ) const override;
 
 private:
     QVariant FileOpenString( const QVariant& value );
+
+private:
+    QAxObject* report_ = Q_NULLPTR;
 };
 
 

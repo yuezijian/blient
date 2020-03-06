@@ -12,7 +12,7 @@ AxChannelEditor::AxChannelEditor( AxWidgetEditor* editor ) : editor_( editor )
 {
 }
 
-QVariant AxChannelEditor::FileOpenString( const QVariant& value )
+QVariant AxChannelEditor::ExecuteCommand( const QString& command, bool ui, const QVariant& value )
 {
-    return this->editor_->FileOpenString( value.toString() );
+    return this->editor_->ExecuteCommand( command, ui, value );
 }

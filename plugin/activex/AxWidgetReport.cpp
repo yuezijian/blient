@@ -5,24 +5,18 @@
 
 #include "AxWidgetReport.hpp"
 
-#include <QWebEnginePage>
-#include <QWebChannel>
-
-#include "AxChannelReport.hpp"
+#include <QAxObject>
 
 
 AxWidgetReport::AxWidgetReport() :
-    QAxWidget( "{600CD6D9-EBE1-42cb-B8DF-DFB81977122E}" )
+    QAxWidget( "{44CBB5DE-5AFB-4c3d-8F3F-0F70CA5372AD}" )
 {
-}
+    this->report_ = new QAxObject( "{F9364159-6AED-4f9c-8BAF-D7C7ED6160A8}" );
 
-void AxWidgetReport::Attach( QWebEnginePage* page, const QString& name )
-{
-    auto channel = page->webChannel();
+    //this->report_->dynamicCall( "LoadFromFile(string)", "d:/h.grf" );
 
-    auto object = new AxChannelReport( this );
-
-    channel->registerObject( name, object );
+    //QAxWidget::dynamicCall( "Report", this->report_->asVariant() );
+    //QAxWidget::dynamicCall( "Start()" );
 }
 
 bool AxWidgetReport::translateKeyEvent( int message, int keycode ) const
@@ -32,7 +26,5 @@ bool AxWidgetReport::translateKeyEvent( int message, int keycode ) const
 
 QVariant AxWidgetReport::FileOpenString( const QVariant& value )
 {
-    auto command = "ExecuteCommand( const QString&, bool, const QString& )";
-
-    return QAxWidget::dynamicCall( command, "FileOpenString", false, value.toString() );
+    return QVariant();
 }

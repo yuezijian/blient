@@ -22,7 +22,7 @@ public:
     explicit AxChannelEditor( AxWidgetEditor* editor );
 
 public Q_SLOTS:
-    QVariant FileOpenString( const QVariant& value );
+    QVariant ExecuteCommand( const QString& command, bool ui, const QVariant& value );
 
 private:
     AxWidgetEditor* editor_ = Q_NULLPTR;

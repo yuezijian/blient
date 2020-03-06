@@ -27,7 +27,7 @@ public:
 private:
     void SetupUI();
 
-    void AddAssistWidget( const QString& title, QWidget* widget );
+    void AddAssistWidget( const QString& title, QWidget* widget, int width = 0 );
 
 private:
     QToolBar* toolbar_ = Q_NULLPTR;
