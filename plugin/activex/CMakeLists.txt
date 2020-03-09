@@ -6,21 +6,22 @@ set(BLIENT_ACTIVEX_SOURCE
 
 if(WIN32)
     list(APPEND BLIENT_ACTIVEX_SOURCE
-        AxChannelEditor.hpp
-        AxChannelEditor.cpp
-        AxChannelReport.hpp
-        AxChannelReport.cpp
-        AxWidgetEditor.hpp
-        AxWidgetEditor.cpp
-        AxWidgetReport.hpp
-        AxWidgetReport.cpp
-        )
+            AxChannelEditor.hpp
+            AxChannelEditor.cpp
+            AxChannelReport.hpp
+            AxChannelReport.cpp
+            AxWidgetEditor.hpp
+            AxWidgetEditor.cpp
+            AxWidgetReport.hpp
+            AxWidgetReport.cpp
+            )
 else()
     list(APPEND BLIENT_ACTIVEX_SOURCE
-        AxWidget.hpp
-        WebEngineChannelObject.hpp
-        WebEngineChannelObject.cpp
-        )
+            AxWidget.hpp
+            AxWidget.cpp
+            WebEngineChannelObject.hpp
+            WebEngineChannelObject.cpp
+            )
 endif()
 
 

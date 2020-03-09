@@ -5,8 +5,6 @@
 
 #include "WebEnginePage.hpp"
 
-#include <QFile>
-
 #include <QWebChannel>
 
 

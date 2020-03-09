@@ -11,7 +11,7 @@
 #include <QVariant>
 
 
-class AxWidgetEditor;
+class AxWidget;
 
 
 class WebEngineChannelObject : public QObject
@@ -19,7 +19,7 @@ class WebEngineChannelObject : public QObject
 Q_OBJECT
 
 public:
-    explicit WebEngineChannelObject( AxWidgetEditor* editor );
+    explicit WebEngineChannelObject( AxWidget* widget );
 
     // 调用前台页面的 JS 逻辑
 
@@ -35,7 +35,7 @@ public Q_SLOTS:
     QVariant FileOpenString( const QVariant& value );
 
 private:
-    AxWidgetEditor* editor_ = Q_NULLPTR;
+    AxWidget* widget_ = Q_NULLPTR;
 
     QString my_property_;
 };

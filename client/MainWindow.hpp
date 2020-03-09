@@ -20,6 +20,8 @@ Q_OBJECT
 public:
     MainWindow();
 
+    void InstallBulitinJS();
+
     void InstallPlugin();
 
     void ToURL( const QString& address );

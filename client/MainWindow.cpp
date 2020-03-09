@@ -7,7 +7,9 @@
 
 #include "MainWindow.hpp"
 
-#include <QWebChannel>
+#include <QWebEngineProfile>
+#include <QWebEngineScript>
+#include <QWebEngineScriptCollection>
 
 #include "WebEngineConsole.hpp"
 #include "WebEnginePage.hpp"
@@ -18,8 +20,25 @@ MainWindow::MainWindow()
 {
     this->SetupUI();
 
-    //this->ToURL( "localhost:3000" );
+    this->ToURL( "localhost:3000" );
     //this->ToURL( "192.168.1.7:3000" );
+}
+
+void MainWindow::InstallBulitinJS()
+{
+    QFile file( ":/blient.js" );
+
+    if ( file.open( QFile::ReadOnly ) )
+    {
+        QWebEngineScript script;
+
+        script.setInjectionPoint( QWebEngineScript::DocumentCreation );
+        script.setRunsOnSubFrames( true );
+        script.setWorldId( QWebEngineScript::MainWorld );
+        script.setSourceCode( file.readAll() );
+
+        QWebEngineProfile::defaultProfile()->scripts()->insert( script );
+    }
 }
 
 void MainWindow::InstallPlugin()
@@ -125,9 +144,9 @@ void MainWindow::SetupUI()
 
 void MainWindow::AddAssistWidget( const QString& title, QWidget* widget, int width )
 {
-    widget->setMaximumWidth( 850 );
-
     //widget->show();
+
+    //widget->setMinimumWidth( 850 );
 
     auto dock = new QDockWidget( title );
 

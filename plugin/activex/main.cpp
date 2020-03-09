@@ -17,11 +17,10 @@
 #include "AxWidget.hpp"
 #endif
 
+#ifdef WIN32
 
 QWidget* CreateWidget( QAxWidget* widget, QObject* object, QWebEnginePage* page, const QString& name )
 {
-    #ifdef WIN32
-
     if ( widget->isNull() )
     {
         auto label = new QLabel;
@@ -36,28 +35,6 @@ QWidget* CreateWidget( QAxWidget* widget, QObject* object, QWebEnginePage* page,
     page->webChannel()->registerObject( name, object );
 
     return widget;
-
-    #else
-
-    auto ax_widget = new AxWidget;
-
-    auto channel = new QWebChannel;
-
-    channel->registerObject( name, ax_widget->ChannelObject() );
-
-    page->setWebChannel( channel );
-
-    return ax_widget;
-
-    //auto label = new QLabel;
-    //
-    //label->setAlignment( Qt::AlignCenter );
-    //label->setMargin( 20 );
-    //label->setText( "Windows ActiveX Control" );
-    //
-    //return label;
-
-    #endif
 }
 
 extern "C" Q_DECL_EXPORT QWidget* CreateWidgetEditor( QWebEnginePage* page, const QString& name )
@@ -75,3 +52,39 @@ extern "C" Q_DECL_EXPORT QWidget* CreateWidgetReport( QWebEnginePage* page, cons
 
     return CreateWidget( widget, channel, page, name );
 }
+
+#else
+
+QWidget* CreateWidget( QWebEnginePage* page, const QString& name )
+{
+    //auto ax_widget = new AxWidget;
+    //
+    //auto channel = new QWebChannel;
+    //
+    //channel->registerObject( name, ax_widget->ChannelObject() );
+    //
+    //page->setWebChannel( channel );
+    //
+    //return ax_widget;
+
+    auto label = new QLabel;
+
+    label->setAlignment( Qt::AlignCenter );
+    label->setMargin( 20 );
+    label->setText( QString( "Windows ActiveX Control %1" ).arg( name ) );
+
+    return label;
+}
+
+extern "C" Q_DECL_EXPORT QWidget* CreateWidgetEditor( QWebEnginePage* page, const QString& name )
+{
+    return CreateWidget( page, name );
+}
+
+extern "C" Q_DECL_EXPORT QWidget* CreateWidgetReport( QWebEnginePage* page, const QString& name )
+{
+    return CreateWidget( page, name );
+}
+
+#endif
+
