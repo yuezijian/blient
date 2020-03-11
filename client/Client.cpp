@@ -29,7 +29,7 @@ int Client::Main( int argc, char* argv[] )
     MainWindow window;
 
     window.InstallBulitinJS();
-    window.InstallPlugin();
+    //window.InstallPlugin();
 
     window.showMaximized();
 

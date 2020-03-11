@@ -431,11 +431,6 @@ function QObject(name, data, webChannel)
 
 window.Blient =
     {
-        valid()
-        {
-            return window.qt;
-        },
-
         create(plugin, callback)
         {
             const channel = new QWebChannel();

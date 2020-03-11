@@ -7,6 +7,8 @@
 
 #include "MainWindow.hpp"
 
+#include <QWebEngineHistory>
+#include <QWebEngineHistoryItem>
 #include <QWebEngineProfile>
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
@@ -20,7 +22,7 @@ MainWindow::MainWindow()
 {
     this->SetupUI();
 
-    this->ToURL( "localhost:3000" );
+    //this->ToURL( "localhost:3000" );
     //this->ToURL( "192.168.1.7:3000" );
 }
 
@@ -105,17 +107,16 @@ void MainWindow::SetupUI()
 
     auto nav_back    = new QAction( QObject::tr( "Back"    ) );
     auto nav_forward = new QAction( QObject::tr( "Forward" ) );
-    auto nav_refresh = new QAction( QObject::tr( "Refresh" ) );
+    auto nav_reload  = new QAction( QObject::tr( "Refresh" ) );
 
-    nav_back->setDisabled( true );
-    nav_forward->setDisabled( true );
-    nav_refresh->setDisabled( true );
+    //nav_back->setDisabled( true );
+    //nav_forward->setDisabled( true );
 
     this->address_ = new QLineEdit;
 
-    this->toolbar_->addAction( nav_back );
+    this->toolbar_->addAction( nav_back    );
     this->toolbar_->addAction( nav_forward );
-    this->toolbar_->addAction( nav_refresh );
+    this->toolbar_->addAction( nav_reload  );
 
     this->toolbar_->addWidget( this->address_ );
 
@@ -125,21 +126,74 @@ void MainWindow::SetupUI()
 
     QMainWindow::setCentralWidget( this->view_ );
 
-    auto status = QMainWindow::statusBar();
+    QObject::connect
+        (
+            nav_back, &QAction::triggered,
+            [ = ]()
+            {
+                this->view_->back();
 
-    status->showMessage( QObject::tr( "Ready" ) );
+                auto history = this->view_->history();
+                auto url     = history->currentItem().url();
+
+                this->address_->setText( url.toDisplayString() );
+            }
+        );
+
+    QObject::connect
+        (
+            nav_forward, &QAction::triggered,
+            [ = ]()
+            {
+                this->view_->forward();
+
+                auto history = this->view_->history();
+                auto url     = history->currentItem().url();
+
+                this->address_->setText( url.toDisplayString() );
+            }
+        );
+
+    QObject::connect
+        (
+            nav_reload, &QAction::triggered,
+            [ = ]()
+            {
+                this->view_->reload();
+
+                auto url = this->view_->history()->currentItem().url();
+
+                this->address_->setText( url.toDisplayString() );
+            }
+        );
+
+    //auto status = QMainWindow::statusBar();
+
+    //status->showMessage( QObject::tr( "Ready" ) );
 
     QMainWindow::setMinimumSize( QSize( 400, 500 ) );
 
     QObject::connect
-    (
-        this->address_, &QLineEdit::returnPressed,
-        [ = ] () { this->ToURL( this->address_->text() ); }
-    );
+        (
+            this->address_, &QLineEdit::returnPressed,
+            [ = ] () { this->ToURL( this->address_->text() ); }
+        );
 
-    auto console = new WebEngineConsole( this->view_ );
+    //QObject::connect
+    //    (
+    //        this->view_, &QWebEngineView::loadStarted,
+    //        [ = ] ()
+    //        {
+    //            auto history = this->view_->history();
+    //
+    //            nav_back->setDisabled( history->backItem().url().isEmpty() );
+    //            nav_forward->setDisabled( history->forwardItem().url().isEmpty() );
+    //        }
+    //    );
 
-    this->AddAssistWidget( QObject::tr( "Console" ), console );
+    //auto console = new WebEngineConsole( this->view_ );
+    //
+    //this->AddAssistWidget( QObject::tr( "Console" ), console );
 }
 
 void MainWindow::AddAssistWidget( const QString& title, QWidget* widget, int width )
