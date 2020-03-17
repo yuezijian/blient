@@ -7,7 +7,10 @@
 
 #include <ClientConfig.hpp>
 
-#include <QtWidgets>
+#include <QApplication>
+#include <QFile>
+
+#include <QWebEngineProfile>
 
 #include "MainWindow.hpp"
 
@@ -26,14 +29,30 @@ int Client::Main( int argc, char* argv[] )
 
     QApplication application( argc, argv );
 
-    MainWindow window;
+    QFile file( ":/blient.js" );
 
-    window.InstallBulitinJS();
-    //window.InstallPlugin();
+    if ( file.open( QFile::ReadOnly ) )
+    {
+        //QWebEngineScript script;
+        //
+        //script.setInjectionPoint( QWebEngineScript::DocumentCreation );
+        //script.setRunsOnSubFrames( true );
+        //script.setWorldId( QWebEngineScript::MainWorld );
+        //script.setSourceCode( file.readAll() );
+        //
+        //QWebEngineProfile::defaultProfile()->scripts()->insert( script );
+    }
 
-    window.showMaximized();
+    this->CreateWindow();
 
-    return QApplication::exec();
+    auto code = QApplication::exec();
+
+    for ( auto window : this->windows_ )
+    {
+        delete window;
+    }
+
+    return code;
 }
 
 Version Client::InstanceVersion() const
@@ -44,4 +63,26 @@ Version Client::InstanceVersion() const
             CLIENT_VERSION_MINOR,
             CLIENT_VERSION_PATCH
         );
+}
+
+MainWindow* Client::CreateWindow()
+{
+    auto profile = QWebEngineProfile::defaultProfile();
+
+    auto window = new MainWindow( profile );
+
+    window->showMaximized();
+
+    this->windows_.append( window );
+
+    QObject::connect
+        (
+            window, &QObject::destroyed,
+            [ = ]()
+            {
+                this->windows_.removeOne( window );
+            }
+        );
+
+    return window;
 }

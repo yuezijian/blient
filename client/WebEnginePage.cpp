@@ -6,6 +6,7 @@
 #include "WebEnginePage.hpp"
 
 #include <QWebChannel>
+#include <QWebEngineSettings>
 
 
 WebEnginePage::WebEnginePage()
@@ -17,3 +18,29 @@ void WebEnginePage::javaScriptConsoleMessage( QWebEnginePage::JavaScriptConsoleM
 {
     emit JavaScriptConsoleMessage( level, message, line_number, source_id );
 }
+
+//QWebEnginePage* WebEnginePage::createWindow( QWebEnginePage::WebWindowType type )
+//{
+//    auto page = QWebEnginePage::createWindow( type );
+//
+//    //switch ( type )
+//    //{
+//    //    case QWebEnginePage::WebBrowserWindow:
+//    //        break;
+//    //    case QWebEnginePage::WebBrowserTab:
+//    //        break;
+//    //    case QWebEnginePage::WebDialog:
+//    //        break;
+//    //    default:
+//    //        ;
+//    //}
+//
+//    //return QWebEngineView::createWindow( type );
+//
+//    qDebug() << type;
+//
+//    qDebug() << page;
+//    qDebug() << this;
+//
+//    return page;
+//}

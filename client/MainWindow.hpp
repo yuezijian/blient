@@ -7,9 +7,16 @@
 #define BLIENT__CLIENT__MAIN_WINDOW__HPP
 
 
-#include <QtWidgets>
+#include <QMainWindow>
 
 
+QT_BEGIN_NAMESPACE
+class QLineEdit;
+class QWebEngineProfile;
+QT_END_NAMESPACE
+
+
+class TabWidget;
 class WebEngineView;
 
 
@@ -18,11 +25,9 @@ class MainWindow : public QMainWindow
 Q_OBJECT
 
 public:
-    MainWindow();
+    explicit MainWindow( QWebEngineProfile* profile );
 
-    void InstallBulitinJS();
-
-    void InstallPlugin();
+    //void InstallPlugin();
 
     void ToURL( const QString& address );
 
@@ -36,7 +41,7 @@ private:
 
     QLineEdit* address_ = Q_NULLPTR;
 
-    WebEngineView* view_ = Q_NULLPTR;
+    TabWidget* tab_ = Q_NULLPTR;
 };
 
 

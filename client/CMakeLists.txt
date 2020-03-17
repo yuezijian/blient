@@ -7,6 +7,8 @@ set(BLIENT_CLIENT_SOURCE
         _client.cpp
         Client.hpp
         Client.cpp
+        TabWidget.hpp
+        TabWidget.cpp
         MainWindow.hpp
         MainWindow.cpp
         WebEngineConsole.hpp

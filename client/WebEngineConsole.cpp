@@ -74,9 +74,9 @@ WebEngineConsole::WebEngineConsole( WebEngineView* view )
         model->appendRow( item );
     };
 
-    QObject::connect
-        (
-            view->Page(), &WebEnginePage::JavaScriptConsoleMessage,
-            function
-        );
+    //QObject::connect
+    //    (
+    //        view->Page(), &WebEnginePage::JavaScriptConsoleMessage,
+    //        function
+    //    );
 }

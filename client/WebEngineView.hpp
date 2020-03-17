@@ -21,15 +21,12 @@ public:
     WebEngineView();
     ~WebEngineView() override;
 
-    WebEnginePage* Page()
-    {
-        return this->page_;
-    }
-
 protected:
     bool event( QEvent* event ) override;
 
     bool eventFilter( QObject* object, QEvent* event ) override;
+
+    QWebEngineView* createWindow( QWebEnginePage::WebWindowType type ) override;
 
 private:
     WebEnginePage* page_ = Q_NULLPTR;

@@ -13,89 +13,75 @@
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
 
+#include "TabWidget.hpp"
 #include "WebEngineConsole.hpp"
 #include "WebEnginePage.hpp"
 #include "WebEngineView.hpp"
 
 
-MainWindow::MainWindow()
+MainWindow::MainWindow( QWebEngineProfile* profile )
 {
     this->SetupUI();
+
+    this->ToURL( "bing.com" );
 
     //this->ToURL( "localhost:3000" );
     //this->ToURL( "192.168.1.7:3000" );
 }
 
-void MainWindow::InstallBulitinJS()
-{
-    QFile file( ":/blient.js" );
-
-    if ( file.open( QFile::ReadOnly ) )
-    {
-        QWebEngineScript script;
-
-        script.setInjectionPoint( QWebEngineScript::DocumentCreation );
-        script.setRunsOnSubFrames( true );
-        script.setWorldId( QWebEngineScript::MainWorld );
-        script.setSourceCode( file.readAll() );
-
-        QWebEngineProfile::defaultProfile()->scripts()->insert( script );
-    }
-}
-
-void MainWindow::InstallPlugin()
-{
-    auto library = Util::Library( "activex" );
-
-    if ( library.load() )
-    {
-        typedef QWidget* ( *Function )( QWebEnginePage*, const QString& );
-
-        {
-            auto CreateWidget = ( Function )( library.resolve( "CreateWidgetEditor" ) );
-
-            if ( CreateWidget )
-            {
-                QWidget* widget = CreateWidget( this->view_->page(), "editor" );
-
-                if ( widget )
-                {
-                    this->AddAssistWidget( "Editor", widget );
-                }
-            }
-        }
-        {
-            auto CreateWidget = ( Function )( library.resolve( "CreateWidgetReport" ) );
-
-            if ( CreateWidget )
-            {
-                QWidget* widget = CreateWidget( this->view_->page(), "report" );
-
-                if ( widget )
-                {
-                    this->AddAssistWidget( "Report", widget );
-                }
-            }
-        }
-
-        return;
-    }
-
-    QMessageBox::warning( this, QObject::tr( "Warning" ), library.errorString() );
-}
+//void MainWindow::InstallPlugin()
+//{
+//    //auto library = Util::Library( "activex" );
+//    //
+//    //if ( library.load() )
+//    //{
+//    //    typedef QWidget* ( *Function )( QWebEnginePage*, const QString& );
+//    //
+//    //    {
+//    //        auto CreateWidget = ( Function )( library.resolve( "CreateWidgetEditor" ) );
+//    //
+//    //        if ( CreateWidget )
+//    //        {
+//    //            QWidget* widget = CreateWidget( this->view_->page(), "editor" );
+//    //
+//    //            if ( widget )
+//    //            {
+//    //                this->AddAssistWidget( "Editor", widget );
+//    //            }
+//    //        }
+//    //    }
+//    //    {
+//    //        auto CreateWidget = ( Function )( library.resolve( "CreateWidgetReport" ) );
+//    //
+//    //        if ( CreateWidget )
+//    //        {
+//    //            QWidget* widget = CreateWidget( this->view_->page(), "report" );
+//    //
+//    //            if ( widget )
+//    //            {
+//    //                this->AddAssistWidget( "Report", widget );
+//    //            }
+//    //        }
+//    //    }
+//    //
+//    //    return;
+//    //}
+//    //
+//    //QMessageBox::warning( this, QObject::tr( "Warning" ), library.errorString() );
+//}
 
 void MainWindow::ToURL( const QString& address )
 {
-    if ( address.indexOf( "http://" ) == 0 || address.indexOf( "https://" ) == 0 )
-    {
-        this->view_->setUrl( address );
-    }
-    else
-    {
-        this->view_->setUrl( QString( "http://%1" ).arg( address ) );
-    }
-
-    this->address_->setText( this->view_->url().toDisplayString() );
+    //if ( address.indexOf( "http://" ) == 0 || address.indexOf( "https://" ) == 0 )
+    //{
+    //    this->view_->setUrl( address );
+    //}
+    //else
+    //{
+    //    this->view_->setUrl( QString( "http://%1" ).arg( address ) );
+    //}
+    //
+    //this->address_->setText( this->view_->url().toDisplayString() );
 }
 
 void MainWindow::SetupUI()
@@ -122,61 +108,83 @@ void MainWindow::SetupUI()
 
     QMainWindow::addToolBar( Qt::TopToolBarArea, this->toolbar_ );
 
-    this->view_ = new WebEngineView;
+    auto widget = new QWidget;
+    auto layout = new QVBoxLayout;
 
-    QMainWindow::setCentralWidget( this->view_ );
+    this->tab_  = new TabWidget;
 
-    QObject::connect
-        (
-            nav_back, &QAction::triggered,
-            [ = ]()
-            {
-                this->view_->back();
+    widget->setLayout( layout );
 
-                auto history = this->view_->history();
-                auto url     = history->currentItem().url();
+    layout->addWidget( this->tab_ );
 
-                this->address_->setText( url.toDisplayString() );
-            }
-        );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    layout->setSpacing( 0 );
 
-    QObject::connect
-        (
-            nav_forward, &QAction::triggered,
-            [ = ]()
-            {
-                this->view_->forward();
+    this->tab_->CreateTab();
 
-                auto history = this->view_->history();
-                auto url     = history->currentItem().url();
+    QMainWindow::setCentralWidget( widget );
 
-                this->address_->setText( url.toDisplayString() );
-            }
-        );
+    //QObject::connect
+    //    (
+    //        nav_back, &QAction::triggered,
+    //        [ = ]()
+    //        {
+    //            this->view_->back();
+    //
+    //            auto history = this->view_->history();
+    //            auto url     = history->currentItem().url();
+    //
+    //            this->address_->setText( url.toDisplayString() );
+    //        }
+    //    );
 
-    QObject::connect
-        (
-            nav_reload, &QAction::triggered,
-            [ = ]()
-            {
-                this->view_->reload();
+    //QObject::connect
+    //    (
+    //        nav_forward, &QAction::triggered,
+    //        [ = ]()
+    //        {
+    //            this->view_->forward();
+    //
+    //            auto history = this->view_->history();
+    //            auto url     = history->currentItem().url();
+    //
+    //            this->address_->setText( url.toDisplayString() );
+    //        }
+    //    );
 
-                auto url = this->view_->history()->currentItem().url();
-
-                this->address_->setText( url.toDisplayString() );
-            }
-        );
+    //QObject::connect
+    //    (
+    //        nav_reload, &QAction::triggered,
+    //        [ = ]()
+    //        {
+    //            this->view_->reload();
+    //
+    //            auto url = this->view_->history()->currentItem().url();
+    //
+    //            this->address_->setText( url.toDisplayString() );
+    //        }
+    //    );
 
     //auto status = QMainWindow::statusBar();
 
     //status->showMessage( QObject::tr( "Ready" ) );
 
-    QMainWindow::setMinimumSize( QSize( 400, 500 ) );
+    QMainWindow::setMinimumSize( QSize( 800, 500 ) );
 
     QObject::connect
         (
-            this->address_, &QLineEdit::returnPressed,
-            [ = ] () { this->ToURL( this->address_->text() ); }
+            this->address_, &QLineEdit::returnPressed, [ = ]()
+            {
+                this->tab_->SetURL( QUrl::fromUserInput( this->address_->text() ) );
+            }
+        );
+
+    QObject::connect
+        (
+            this->tab_, &TabWidget::ChangeURL, [ = ]( const QUrl& url )
+            {
+                this->address_->setText( url.toDisplayString() );
+            }
         );
 
     //QObject::connect

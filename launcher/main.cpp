@@ -1,8 +1,5 @@
-#ifdef WIN32
-#include <atlbase.h>
-#endif
-
 #include <QApplication>
+#include <QDebug>
 #include <QMessageBox>
 
 #include "../base/Program.hpp"
@@ -19,18 +16,11 @@ int APIENTRY wWinMain
 )
 {
     int   argc   = 1;
-    char* argv[] = { "" };
-
-    //ATLASSERT( SUCCEEDED( CoInitialize( NULL ) ) );
-
-    //CComModule module;
-
-    //module.Init( 0, hInstance );
+    char* argv[] = { "launcher.exe" };
 #else
 int main( int argc, char* argv[] )
 {
 #endif
-
     auto library = Util::Library( "client" );
 
     if ( library.load() )

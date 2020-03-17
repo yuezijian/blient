@@ -37,6 +37,8 @@ protected:
             int line_number,
             const QString& source_id
         ) override;
+
+    //QWebEnginePage* createWindow( QWebEnginePage::WebWindowType type ) override;
 };
 
 

@@ -5,6 +5,7 @@
 
 #include "WebEngineView.hpp"
 
+#include "MainWindow.hpp"
 #include "WebEnginePage.hpp"
 
 #include <QEvent>
@@ -16,16 +17,16 @@
 
 WebEngineView::WebEngineView()
 {
-    this->page_ = new WebEnginePage;
+    //this->page_ = new WebEnginePage;
 
-    QWebEngineView::setPage( this->page_ );
+    //QWebEngineView::setPage( this->page_ );
 }
 
 WebEngineView::~WebEngineView()
 {
-    delete this->page_;
+    //delete this->page_;
 
-    this->page_ = Q_NULLPTR;
+    //this->page_ = Q_NULLPTR;
 }
 
 bool WebEngineView::event( QEvent* event )
@@ -58,4 +59,31 @@ bool WebEngineView::eventFilter( QObject* object, QEvent* event )
     }
 
     return QWebEngineView::eventFilter( object, event );
+}
+
+QWebEngineView* WebEngineView::createWindow( QWebEnginePage::WebWindowType type )
+{
+    auto window = qobject_cast< MainWindow* >( WebEngineView::window() );
+
+    if ( window )
+    {
+        //switch ( type )
+        //{
+        //    case QWebEnginePage::WebBrowserWindow:
+        //        break;
+        //    case QWebEnginePage::WebBrowserTab:
+        //        break;
+        //    case QWebEnginePage::WebDialog:
+        //        break;
+        //    default:
+        //        ;
+        //}
+    }
+
+    //return QWebEngineView::createWindow( type );
+
+    //qDebug() << view;
+    //qDebug() << this->Page();
+
+    return QWebEngineView::createWindow( type );
 }
