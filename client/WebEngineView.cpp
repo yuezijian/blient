@@ -5,14 +5,16 @@
 
 #include "WebEngineView.hpp"
 
-#include "MainWindow.hpp"
-#include "WebEnginePage.hpp"
-
 #include <QEvent>
 
 #include <QWebEngineProfile>
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
+
+#include "Client.hpp"
+#include "MainWindow.hpp"
+#include "TabWidget.hpp"
+#include "WebEnginePage.hpp"
 
 
 WebEngineView::WebEngineView()
@@ -67,23 +69,26 @@ QWebEngineView* WebEngineView::createWindow( QWebEnginePage::WebWindowType type 
 
     if ( window )
     {
-        //switch ( type )
-        //{
-        //    case QWebEnginePage::WebBrowserWindow:
-        //        break;
-        //    case QWebEnginePage::WebBrowserTab:
-        //        break;
-        //    case QWebEnginePage::WebDialog:
-        //        break;
-        //    default:
-        //        ;
-        //}
+        switch ( type )
+        {
+            case QWebEnginePage::WebBrowserWindow:
+            {
+                return window->ClientInstance()->CreateWindow()->Tab()->View();
+            }
+            case QWebEnginePage::WebBrowserTab:
+            {
+                return window->Tab()->CreateView();
+            }
+            case QWebEnginePage::WebDialog:
+                break;
+            case QWebEnginePage::WebBrowserBackgroundTab:
+            {
+                return window->Tab()->CreateViewBackground();
+            }
+            default:
+                ;
+        }
     }
-
-    //return QWebEngineView::createWindow( type );
-
-    //qDebug() << view;
-    //qDebug() << this->Page();
 
     return QWebEngineView::createWindow( type );
 }

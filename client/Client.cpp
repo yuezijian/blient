@@ -21,7 +21,10 @@ int Client::Main( int argc, char* argv[] )
     //
     // 调用
 
-    QApplication::setOrganizationName( "Luna" );
+    QCoreApplication::setOrganizationName( "Luna" );
+
+    QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling );
+    QCoreApplication::setAttribute( Qt::AA_UseHighDpiPixmaps    );
 
     // QApplication 对象创建之前
     //
@@ -69,7 +72,7 @@ MainWindow* Client::CreateWindow()
 {
     auto profile = QWebEngineProfile::defaultProfile();
 
-    auto window = new MainWindow( profile );
+    auto window = new MainWindow( this, profile );
 
     window->showMaximized();
 

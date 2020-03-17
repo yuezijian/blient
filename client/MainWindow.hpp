@@ -16,6 +16,7 @@ class QWebEngineProfile;
 QT_END_NAMESPACE
 
 
+class Client;
 class TabWidget;
 class WebEngineView;
 
@@ -25,11 +26,13 @@ class MainWindow : public QMainWindow
 Q_OBJECT
 
 public:
-    explicit MainWindow( QWebEngineProfile* profile );
+    MainWindow( Client* client, QWebEngineProfile* profile );
 
     //void InstallPlugin();
 
-    void ToURL( const QString& address );
+    Client* ClientInstance() { return this->client_; }
+
+    [[nodiscard]] TabWidget* Tab() const { return this->tab_; }
 
 private:
     void SetupUI();
@@ -37,9 +40,11 @@ private:
     void AddAssistWidget( const QString& title, QWidget* widget, int width = 0 );
 
 private:
-    QToolBar* toolbar_ = Q_NULLPTR;
+    Client* client_ = Q_NULLPTR;
 
-    QLineEdit* address_ = Q_NULLPTR;
+    QToolBar* tool_ = Q_NULLPTR;
+
+    QLineEdit* edit_ = Q_NULLPTR;
 
     TabWidget* tab_ = Q_NULLPTR;
 };

@@ -13,23 +13,71 @@
 
 TabWidget::TabWidget()
 {
-    auto bar = QTabWidget::tabBar();
+    auto tab = QTabWidget::tabBar();
 
-    bar->setContextMenuPolicy( Qt::CustomContextMenu );
-    bar->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
-    bar->setMovable( true );
-    bar->setTabsClosable( true );
+    tab->setContextMenuPolicy( Qt::CustomContextMenu );
+    tab->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
+    tab->setMovable( true );
+    tab->setTabsClosable( true );
 
     //QTabWidget::setDocumentMode( true );
     QTabWidget::setElideMode( Qt::ElideRight );
+
+    QObject::connect
+        (
+            tab, &QTabBar::tabBarDoubleClicked, [ this ]( int index )
+            {
+                qDebug() << "hello";
+
+                if ( index == -1 )
+                {
+                    this->CreateView();
+                }
+            }
+        );
+
+    QObject::connect( tab, &QTabBar::tabCloseRequested, this, &TabWidget::CloseTab );
 }
 
-WebEngineView* TabWidget::ActiveView() const
+WebEngineView* TabWidget::View() const
 {
     return qobject_cast< WebEngineView* >( QTabWidget::currentWidget() );
 }
 
-WebEngineView* TabWidget::CreateTab()
+void TabWidget::CloseTab( int index )
+{
+    if ( auto view = qobject_cast< WebEngineView* >( QTabWidget::widget( index ) ) )
+    {
+        auto focus = view->hasFocus();
+
+        QTabWidget::removeTab( index );
+
+        auto count = QTabWidget::count();
+
+        if ( focus && count > 0 )
+        {
+            this->View()->setFocus();
+        }
+
+        if ( count == 0 )
+        {
+            this->CreateView();
+        }
+
+        view->deleteLater();
+    }
+}
+
+WebEngineView* TabWidget::CreateView()
+{
+    auto view = this->CreateViewBackground();
+
+    QTabWidget::setCurrentWidget( view );
+
+    return view;
+}
+
+WebEngineView* TabWidget::CreateViewBackground()
 {
     auto view = new WebEngineView;
     //auto page = new WebEnginePage;
@@ -45,9 +93,28 @@ WebEngineView* TabWidget::CreateTab()
                     QTabWidget::tabBar()->setTabData( index, url );
                 }
 
-                if ( currentIndex() == index )
+                if ( QTabWidget::currentIndex() == index )
                 {
                     emit ChangeURL(url);
+                }
+            }
+        );
+
+    QObject::connect
+        (
+            view, &QWebEngineView::titleChanged, [ = ]( const QString& title )
+            {
+                int index = QTabWidget::indexOf( view );
+
+                if ( index != -1 )
+                {
+                    QTabWidget::setTabText( index, title );
+                    QTabWidget::setTabToolTip( index, title );
+                }
+
+                if ( QTabWidget::currentIndex() == index )
+                {
+                    emit ChangeTitle( title );
                 }
             }
         );
@@ -62,7 +129,7 @@ WebEngineView* TabWidget::CreateTab()
 
 void TabWidget::SetURL( const QUrl& url )
 {
-    if ( auto view = this->ActiveView() )
+    if ( auto view = this->View() )
     {
         view->setUrl( url );
         view->setFocus();

@@ -20,13 +20,18 @@ Q_OBJECT
 public:
     TabWidget();
 
-    [[nodiscard]] WebEngineView* ActiveView() const;
+    [[nodiscard]] WebEngineView* View() const;
 
 signals:
     void ChangeURL( const QUrl& url );
 
+    void ChangeTitle( const QString& title );
+
 public slots:
-    WebEngineView* CreateTab();
+    void CloseTab( int index );
+
+    WebEngineView* CreateView();
+    WebEngineView* CreateViewBackground();
 
     void SetURL( const QUrl& url );
 };

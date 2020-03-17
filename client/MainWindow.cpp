@@ -19,11 +19,9 @@
 #include "WebEngineView.hpp"
 
 
-MainWindow::MainWindow( QWebEngineProfile* profile )
+MainWindow::MainWindow( Client* client, QWebEngineProfile* profile ) : client_( client )
 {
     this->SetupUI();
-
-    this->ToURL( "bing.com" );
 
     //this->ToURL( "localhost:3000" );
     //this->ToURL( "192.168.1.7:3000" );
@@ -70,26 +68,12 @@ MainWindow::MainWindow( QWebEngineProfile* profile )
 //    //QMessageBox::warning( this, QObject::tr( "Warning" ), library.errorString() );
 //}
 
-void MainWindow::ToURL( const QString& address )
-{
-    //if ( address.indexOf( "http://" ) == 0 || address.indexOf( "https://" ) == 0 )
-    //{
-    //    this->view_->setUrl( address );
-    //}
-    //else
-    //{
-    //    this->view_->setUrl( QString( "http://%1" ).arg( address ) );
-    //}
-    //
-    //this->address_->setText( this->view_->url().toDisplayString() );
-}
-
 void MainWindow::SetupUI()
 {
-    this->toolbar_ = new QToolBar();
+    this->tool_ = new QToolBar();
 
-    this->toolbar_->setFloatable( false );
-    this->toolbar_->setMovable( false );
+    this->tool_->setFloatable( false );
+    this->tool_->setMovable( false );
 
     auto nav_back    = new QAction( QObject::tr( "Back"    ) );
     auto nav_forward = new QAction( QObject::tr( "Forward" ) );
@@ -98,15 +82,19 @@ void MainWindow::SetupUI()
     //nav_back->setDisabled( true );
     //nav_forward->setDisabled( true );
 
-    this->address_ = new QLineEdit;
+    this->edit_ = new QLineEdit;
 
-    this->toolbar_->addAction( nav_back    );
-    this->toolbar_->addAction( nav_forward );
-    this->toolbar_->addAction( nav_reload  );
+    auto new_tab  = new QAction( QObject::tr( "+" ) );
 
-    this->toolbar_->addWidget( this->address_ );
+    this->tool_->addAction( nav_back );
+    this->tool_->addAction( nav_forward );
+    this->tool_->addAction( nav_reload );
 
-    QMainWindow::addToolBar( Qt::TopToolBarArea, this->toolbar_ );
+    this->tool_->addWidget( this->edit_ );
+
+    this->tool_->addAction( new_tab );
+
+    QMainWindow::addToolBar( Qt::TopToolBarArea, this->tool_ );
 
     auto widget = new QWidget;
     auto layout = new QVBoxLayout;
@@ -119,8 +107,6 @@ void MainWindow::SetupUI()
 
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
-
-    this->tab_->CreateTab();
 
     QMainWindow::setCentralWidget( widget );
 
@@ -165,6 +151,14 @@ void MainWindow::SetupUI()
     //        }
     //    );
 
+    QObject::connect
+        (
+            new_tab, &QAction::triggered, [ this ]()
+            {
+                this->tab_->CreateView();
+            }
+        );
+
     //auto status = QMainWindow::statusBar();
 
     //status->showMessage( QObject::tr( "Ready" ) );
@@ -173,9 +167,9 @@ void MainWindow::SetupUI()
 
     QObject::connect
         (
-            this->address_, &QLineEdit::returnPressed, [ = ]()
+            this->edit_, &QLineEdit::returnPressed, [ = ]()
             {
-                this->tab_->SetURL( QUrl::fromUserInput( this->address_->text() ) );
+                this->tab_->SetURL( QUrl::fromUserInput( this->edit_->text() ) );
             }
         );
 
@@ -183,7 +177,7 @@ void MainWindow::SetupUI()
         (
             this->tab_, &TabWidget::ChangeURL, [ = ]( const QUrl& url )
             {
-                this->address_->setText( url.toDisplayString() );
+                this->edit_->setText( url.toDisplayString() );
             }
         );
 
@@ -202,6 +196,8 @@ void MainWindow::SetupUI()
     //auto console = new WebEngineConsole( this->view_ );
     //
     //this->AddAssistWidget( QObject::tr( "Console" ), console );
+
+    this->tab_->CreateView();
 }
 
 void MainWindow::AddAssistWidget( const QString& title, QWidget* widget, int width )
@@ -216,5 +212,5 @@ void MainWindow::AddAssistWidget( const QString& title, QWidget* widget, int wid
 
     QMainWindow::addDockWidget( Qt::RightDockWidgetArea, dock );
 
-    this->toolbar_->addAction( dock->toggleViewAction() );
+    this->tool_->addAction( dock->toggleViewAction() );
 }
