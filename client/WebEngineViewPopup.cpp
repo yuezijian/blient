@@ -28,19 +28,21 @@ WebEngineViewPopup::WebEngineViewPopup()
     QWidget::setLayout( layout );
 
     QObject::connect
-    (
-        this->view_->page(), &QWebEnginePage::geometryChangeRequested, [ this ] ( const QRect& geometry )
-        {
-            if ( auto window = QWidget::windowHandle() )
+        (
+            this->view_->page(), &QWebEnginePage::geometryChangeRequested, [ this ]( const QRect& new_geometry )
             {
-                QWidget::setGeometry( geometry.marginsRemoved( window->frameMargins() ) );
+                if ( auto window = QWidget::windowHandle() )
+                {
+                    QWidget::setGeometry( new_geometry.marginsRemoved( window->frameMargins() ) );
+                }
+
+                QWidget::show();
+
+                this->view_->setFocus();
             }
-
-            QWidget::show();
-
-            this->view_->setFocus();
-        }
-    );
+        );
 
     QObject::connect( this->view_->page(), &QWebEnginePage::windowCloseRequested, this, &QWidget::close );
+
+    QWidget::show();
 }
