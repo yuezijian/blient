@@ -27,8 +27,6 @@ TabWidget::TabWidget()
         (
             tab, &QTabBar::tabBarDoubleClicked, [ this ]( int index )
             {
-                qDebug() << "hello";
-
                 if ( index == -1 )
                 {
                     this->CreateView();
@@ -37,6 +35,8 @@ TabWidget::TabWidget()
         );
 
     QObject::connect( tab, &QTabBar::tabCloseRequested, this, &TabWidget::CloseTab );
+
+    QObject::connect( this, &QTabWidget::currentChanged, this, &TabWidget::ChangeCurrent );
 }
 
 WebEngineView* TabWidget::View() const
@@ -44,9 +44,14 @@ WebEngineView* TabWidget::View() const
     return qobject_cast< WebEngineView* >( QTabWidget::currentWidget() );
 }
 
+WebEngineView* TabWidget::View( int index ) const
+{
+    return qobject_cast< WebEngineView* >( QTabWidget::widget( index ) );
+}
+
 void TabWidget::CloseTab( int index )
 {
-    if ( auto view = qobject_cast< WebEngineView* >( QTabWidget::widget( index ) ) )
+    if ( auto view = this->View( index ) )
     {
         auto focus = view->hasFocus();
 
@@ -119,6 +124,17 @@ WebEngineView* TabWidget::CreateViewBackground()
             }
         );
 
+    QObject::connect
+        (
+            view, &QWebEngineView::loadProgress, [ this, view ]( int progress )
+            {
+                if ( QTabWidget::currentIndex() == QTabWidget::indexOf( view ) )
+                {
+                    emit LoadProgress( progress );
+                }
+            }
+        );
+
     //view->setPage( page );
     view->show();
 
@@ -132,6 +148,38 @@ void TabWidget::SetURL( const QUrl& url )
     if ( auto view = this->View() )
     {
         view->setUrl( url );
+        view->setFocus();
+    }
+}
+
+void TabWidget::ChangeCurrent( int index )
+{
+    if ( index != -1 )
+    {
+        auto view = this->View( index );
+
+        if ( !view->url().isEmpty() )
+        {
+            view->setFocus();
+        }
+
+        emit ChangeURL( view->url() );
+        emit ChangeTitle( view->title() );
+        emit LoadProgress( view->LoadProgress() );
+    }
+    else
+    {
+        emit ChangeURL(QUrl());
+        emit ChangeTitle(QString());
+        emit LoadProgress( 0 );
+    }
+}
+
+void TabWidget::TriggerWebAction( QWebEnginePage::WebAction action )
+{
+    if ( auto view = this->View() )
+    {
+        view->triggerPageAction( action );
         view->setFocus();
     }
 }

@@ -74,21 +74,19 @@ void MainWindow::SetupUI()
 
     this->tool_->setFloatable( false );
     this->tool_->setMovable( false );
+    this->tool_->toggleViewAction()->setEnabled( false );
 
-    auto nav_back    = new QAction( QObject::tr( "Back"    ) );
-    auto nav_forward = new QAction( QObject::tr( "Forward" ) );
-    auto nav_reload  = new QAction( QObject::tr( "Refresh" ) );
-
-    //nav_back->setDisabled( true );
-    //nav_forward->setDisabled( true );
+    this->nav_back_    = new QAction( QObject::tr( "Back"    ) );
+    this->nav_forward_ = new QAction( QObject::tr( "Forward" ) );
+    this->nav_reload_  = new QAction( QObject::tr( "Reload"  ) );
 
     this->edit_ = new QLineEdit;
 
     auto new_tab  = new QAction( QObject::tr( "+" ) );
 
-    this->tool_->addAction( nav_back );
-    this->tool_->addAction( nav_forward );
-    this->tool_->addAction( nav_reload );
+    this->tool_->addAction( this->nav_back_    );
+    this->tool_->addAction( this->nav_forward_ );
+    this->tool_->addAction( this->nav_reload_  );
 
     this->tool_->addWidget( this->edit_ );
 
@@ -110,46 +108,39 @@ void MainWindow::SetupUI()
 
     QMainWindow::setCentralWidget( widget );
 
-    //QObject::connect
-    //    (
-    //        nav_back, &QAction::triggered,
-    //        [ = ]()
-    //        {
-    //            this->view_->back();
-    //
-    //            auto history = this->view_->history();
-    //            auto url     = history->currentItem().url();
-    //
-    //            this->address_->setText( url.toDisplayString() );
-    //        }
-    //    );
+    auto status = QMainWindow::statusBar();
 
-    //QObject::connect
-    //    (
-    //        nav_forward, &QAction::triggered,
-    //        [ = ]()
-    //        {
-    //            this->view_->forward();
-    //
-    //            auto history = this->view_->history();
-    //            auto url     = history->currentItem().url();
-    //
-    //            this->address_->setText( url.toDisplayString() );
-    //        }
-    //    );
+    this->progress_ = new QProgressBar;
 
-    //QObject::connect
-    //    (
-    //        nav_reload, &QAction::triggered,
-    //        [ = ]()
-    //        {
-    //            this->view_->reload();
-    //
-    //            auto url = this->view_->history()->currentItem().url();
-    //
-    //            this->address_->setText( url.toDisplayString() );
-    //        }
-    //    );
+    this->progress_->setRange( 0, 100 );
+
+    status->addWidget( this->progress_ );
+
+    QMainWindow::setMinimumSize( QSize( 800, 500 ) );
+
+    QObject::connect
+        (
+            this->nav_back_, &QAction::triggered, [ this ]()
+            {
+                this->tab_->TriggerWebAction( QWebEnginePage::Back );
+            }
+        );
+
+    QObject::connect
+        (
+            this->nav_forward_, &QAction::triggered, [ this ]()
+            {
+                this->tab_->TriggerWebAction( QWebEnginePage::Forward );
+            }
+        );
+
+    QObject::connect
+        (
+            this->nav_reload_, &QAction::triggered, [ this ]()
+            {
+                this->tab_->TriggerWebAction( QWebEnginePage::WebAction( this->nav_reload_->data().toInt() ) );
+            }
+        );
 
     QObject::connect
         (
@@ -158,12 +149,6 @@ void MainWindow::SetupUI()
                 this->tab_->CreateView();
             }
         );
-
-    //auto status = QMainWindow::statusBar();
-
-    //status->showMessage( QObject::tr( "Ready" ) );
-
-    QMainWindow::setMinimumSize( QSize( 800, 500 ) );
 
     QObject::connect
         (
@@ -181,17 +166,9 @@ void MainWindow::SetupUI()
             }
         );
 
-    //QObject::connect
-    //    (
-    //        this->view_, &QWebEngineView::loadStarted,
-    //        [ = ] ()
-    //        {
-    //            auto history = this->view_->history();
-    //
-    //            nav_back->setDisabled( history->backItem().url().isEmpty() );
-    //            nav_forward->setDisabled( history->forwardItem().url().isEmpty() );
-    //        }
-    //    );
+    QObject::connect( this->tab_, &TabWidget::ChangeTitle, this, &MainWindow::ChangeTitle );
+
+    QObject::connect( this->tab_, &TabWidget::LoadProgress, this, &MainWindow::LoadProgress );
 
     //auto console = new WebEngineConsole( this->view_ );
     //
@@ -213,4 +190,40 @@ void MainWindow::AddAssistWidget( const QString& title, QWidget* widget, int wid
     QMainWindow::addDockWidget( Qt::RightDockWidgetArea, dock );
 
     this->tool_->addAction( dock->toggleViewAction() );
+}
+
+void MainWindow::ChangeTitle( const QString& title )
+{
+    if ( title.isEmpty() )
+    {
+        QMainWindow::setWindowTitle( QString() );
+    }
+    else
+    {
+        QMainWindow::setWindowTitle( title );
+    }
+}
+
+void MainWindow::LoadProgress( int progress )
+{
+    if ( 0 < progress && progress < 100 )
+    {
+        this->nav_reload_->setText( QObject::tr( "Stop"  ) );
+        this->nav_reload_->setData( QWebEnginePage::Stop );
+
+        if ( this->progress_->isHidden() )
+        {
+            this->progress_->show();
+        }
+
+        this->progress_->setValue( progress );
+    }
+    else
+    {
+        this->nav_reload_->setText( QObject::tr( "Reload"  ) );
+        this->nav_reload_->setData( QWebEnginePage::Reload );
+
+        this->progress_->hide();
+        this->progress_->setValue( 0 );
+    }
 }

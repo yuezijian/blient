@@ -17,6 +17,8 @@ set(BLIENT_CLIENT_SOURCE
         WebEnginePage.cpp
         WebEngineView.hpp
         WebEngineView.cpp
+        WebEngineViewPopup.hpp
+        WebEngineViewPopup.cpp
         )
 
 add_library(client SHARED ${BLIENT_CLIENT_SOURCE} ../resource/resource.qrc)

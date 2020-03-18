@@ -15,10 +15,35 @@
 #include "MainWindow.hpp"
 #include "TabWidget.hpp"
 #include "WebEnginePage.hpp"
+#include "WebEngineViewPopup.hpp"
 
 
 WebEngineView::WebEngineView()
 {
+    QObject::connect
+        (
+            this, &QWebEngineView::loadStarted, [ this ]()
+            {
+                this->load_progress_ = 0;
+            }
+        );
+
+    QObject::connect
+        (
+            this, &QWebEngineView::loadProgress, [ this ]( int progress )
+            {
+                this->load_progress_ = progress;
+            }
+        );
+
+    QObject::connect
+        (
+            this, &QWebEngineView::loadFinished, [ this ]( bool success )
+            {
+                this->load_progress_ = success ? 100 : -1;
+            }
+        );
+
     //this->page_ = new WebEnginePage;
 
     //QWebEngineView::setPage( this->page_ );
@@ -80,7 +105,11 @@ QWebEngineView* WebEngineView::createWindow( QWebEnginePage::WebWindowType type 
                 return window->Tab()->CreateView();
             }
             case QWebEnginePage::WebDialog:
-                break;
+            {
+                auto popup = new WebEngineViewPopup;
+
+                return popup->View();
+            }
             case QWebEnginePage::WebBrowserBackgroundTab:
             {
                 return window->Tab()->CreateViewBackground();

@@ -8,6 +8,7 @@
 
 
 #include <QTabWidget>
+#include <QWebEnginePage>
 
 
 class WebEngineView;
@@ -21,11 +22,14 @@ public:
     TabWidget();
 
     [[nodiscard]] WebEngineView* View() const;
+    [[nodiscard]] WebEngineView* View( int index ) const;
 
 signals:
     void ChangeURL( const QUrl& url );
 
     void ChangeTitle( const QString& title );
+
+    void LoadProgress( int progress );
 
 public slots:
     void CloseTab( int index );
@@ -34,6 +38,11 @@ public slots:
     WebEngineView* CreateViewBackground();
 
     void SetURL( const QUrl& url );
+
+    void TriggerWebAction( QWebEnginePage::WebAction action );
+
+private slots:
+    void ChangeCurrent( int index );
 };
 
 

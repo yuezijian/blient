@@ -12,6 +12,7 @@
 
 QT_BEGIN_NAMESPACE
 class QLineEdit;
+class QProgressBar;
 class QWebEngineProfile;
 QT_END_NAMESPACE
 
@@ -39,14 +40,25 @@ private:
 
     void AddAssistWidget( const QString& title, QWidget* widget, int width = 0 );
 
+private slots:
+    void ChangeTitle( const QString& title );
+
+    void LoadProgress( int progress );
+
 private:
     Client* client_ = Q_NULLPTR;
 
     QToolBar* tool_ = Q_NULLPTR;
 
+    QAction* nav_back_    = Q_NULLPTR;
+    QAction* nav_forward_ = Q_NULLPTR;
+    QAction* nav_reload_  = Q_NULLPTR;
+
     QLineEdit* edit_ = Q_NULLPTR;
 
     TabWidget* tab_ = Q_NULLPTR;
+
+    QProgressBar* progress_ = Q_NULLPTR;
 };
 
 

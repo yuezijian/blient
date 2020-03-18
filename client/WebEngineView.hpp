@@ -21,6 +21,8 @@ public:
     WebEngineView();
     ~WebEngineView() override;
 
+    [[nodiscard]] int LoadProgress() const { return this->load_progress_; }
+
 protected:
     bool event( QEvent* event ) override;
 
@@ -30,6 +32,8 @@ protected:
 
 private:
     WebEnginePage* page_ = Q_NULLPTR;
+
+    int load_progress_ = 0;
 };
 
 
