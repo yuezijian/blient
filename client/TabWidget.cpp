@@ -20,13 +20,14 @@ TabWidget::TabWidget()
     tab->setMovable( true );
     tab->setTabsClosable( true );
 
-    //QTabWidget::setDocumentMode( true );
+    QTabWidget::setDocumentMode( true );
     QTabWidget::setElideMode( Qt::ElideRight );
 
     QObject::connect
         (
             tab, &QTabBar::tabBarDoubleClicked, [ this ]( int index )
             {
+                qDebug() << index;
                 if ( index == -1 )
                 {
                     this->CreateView();

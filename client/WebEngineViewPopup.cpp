@@ -6,12 +6,16 @@
 #include "WebEngineViewPopup.hpp"
 
 #include <QVBoxLayout>
+#include <QWindow>
 
 #include "WebEngineView.hpp"
 
 
 WebEngineViewPopup::WebEngineViewPopup()
 {
+    QWidget::setAttribute( Qt::WA_DeleteOnClose );
+    QWidget::setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
+
     this->view_ = new WebEngineView;
 
     this->view_->setFocus();
@@ -22,6 +26,21 @@ WebEngineViewPopup::WebEngineViewPopup()
     layout->setContentsMargins( 0, 0, 0, 0 );
 
     QWidget::setLayout( layout );
+
+    QObject::connect
+    (
+        this->view_->page(), &QWebEnginePage::geometryChangeRequested, [ this ] ( const QRect& geometry )
+        {
+            if ( auto window = QWidget::windowHandle() )
+            {
+                QWidget::setGeometry( geometry.marginsRemoved( window->frameMargins() ) );
+            }
+
+            QWidget::show();
+
+            this->view_->setFocus();
+        }
+    );
 
     QObject::connect( this->view_->page(), &QWebEnginePage::windowCloseRequested, this, &QWidget::close );
 }

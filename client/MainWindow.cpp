@@ -82,15 +82,11 @@ void MainWindow::SetupUI()
 
     this->edit_ = new QLineEdit;
 
-    auto new_tab  = new QAction( QObject::tr( "+" ) );
-
     this->tool_->addAction( this->nav_back_    );
     this->tool_->addAction( this->nav_forward_ );
     this->tool_->addAction( this->nav_reload_  );
 
     this->tool_->addWidget( this->edit_ );
-
-    this->tool_->addAction( new_tab );
 
     QMainWindow::addToolBar( Qt::TopToolBarArea, this->tool_ );
 
@@ -139,14 +135,6 @@ void MainWindow::SetupUI()
             this->nav_reload_, &QAction::triggered, [ this ]()
             {
                 this->tab_->TriggerWebAction( QWebEnginePage::WebAction( this->nav_reload_->data().toInt() ) );
-            }
-        );
-
-    QObject::connect
-        (
-            new_tab, &QAction::triggered, [ this ]()
-            {
-                this->tab_->CreateView();
             }
         );
 
