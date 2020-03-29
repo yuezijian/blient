@@ -1,5 +1,5 @@
 //
-// Created by 岳子剑 on 2019/11/1.
+// Created by 岳子剑 on 2019/11/01.
 //
 
 
@@ -9,7 +9,7 @@
 #include <QWebEngineSettings>
 
 
-WebEnginePage::WebEnginePage()
+WebEnginePage::WebEnginePage( QObject* parent ) : QWebEnginePage( parent )
 {
     QWebEnginePage::setWebChannel( new QWebChannel );
 }
@@ -18,29 +18,3 @@ void WebEnginePage::javaScriptConsoleMessage( QWebEnginePage::JavaScriptConsoleM
 {
     emit JavaScriptConsoleMessage( level, message, line_number, source_id );
 }
-
-//QWebEnginePage* WebEnginePage::createWindow( QWebEnginePage::WebWindowType type )
-//{
-//    auto page = QWebEnginePage::createWindow( type );
-//
-//    //switch ( type )
-//    //{
-//    //    case QWebEnginePage::WebBrowserWindow:
-//    //        break;
-//    //    case QWebEnginePage::WebBrowserTab:
-//    //        break;
-//    //    case QWebEnginePage::WebDialog:
-//    //        break;
-//    //    default:
-//    //        ;
-//    //}
-//
-//    //return QWebEngineView::createWindow( type );
-//
-//    qDebug() << type;
-//
-//    qDebug() << page;
-//    qDebug() << this;
-//
-//    return page;
-//}

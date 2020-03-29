@@ -29,7 +29,7 @@ Q_OBJECT
 public:
     MainWindow( Client* client, QWebEngineProfile* profile );
 
-    //void InstallPlugin();
+    void InstallPlugin();
 
     Client* ClientInstance() { return this->client_; }
 

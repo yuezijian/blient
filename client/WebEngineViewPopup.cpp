@@ -43,6 +43,4 @@ WebEngineViewPopup::WebEngineViewPopup()
         );
 
     QObject::connect( this->view_->page(), &QWebEnginePage::windowCloseRequested, this, &QWidget::close );
-
-    QWidget::show();
 }

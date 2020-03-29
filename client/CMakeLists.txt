@@ -15,6 +15,8 @@ set(BLIENT_CLIENT_SOURCE
         WebEngineConsole.cpp
         WebEnginePage.hpp
         WebEnginePage.cpp
+        WebEngineUrlSchemeHandlerExecutable.hpp
+        WebEngineUrlSchemeHandlerExecutable.cpp
         WebEngineView.hpp
         WebEngineView.cpp
         WebEngineViewPopup.hpp

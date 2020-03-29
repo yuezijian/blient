@@ -37,7 +37,7 @@ public slots:
     WebEngineView* CreateView();
     WebEngineView* CreateViewBackground();
 
-    void SetURL( const QUrl& url );
+    void SetURL( const QString& url );
 
     void TriggerWebAction( QWebEnginePage::WebAction action );
 

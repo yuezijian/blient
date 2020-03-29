@@ -11,8 +11,11 @@
 #include <QFile>
 
 #include <QWebEngineProfile>
+#include <QWebEngineUrlScheme>
 
 #include "MainWindow.hpp"
+#include "TabWidget.hpp"
+#include "WebEngineUrlSchemeHandlerExecutable.hpp"
 
 
 int Client::Main( int argc, char* argv[] )
@@ -26,33 +29,43 @@ int Client::Main( int argc, char* argv[] )
     QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling );
     QCoreApplication::setAttribute( Qt::AA_UseHighDpiPixmaps    );
 
+    QWebEngineUrlScheme::registerScheme( QWebEngineUrlScheme( "executable" ) );
+
     // QApplication 对象创建之前
     //
     // 结束
 
     QApplication application( argc, argv );
 
-    QFile file( ":/blient.js" );
+    QWebEngineProfile::defaultProfile()->installUrlSchemeHandler( "executable", new WebEngineUrlSchemeHandlerExecutable );
 
-    if ( file.open( QFile::ReadOnly ) )
+    //QFile file( ":/blient.js" );
+    //
+    //if ( file.open( QFile::ReadOnly ) )
+    //{
+    //    //QWebEngineScript script;
+    //    //
+    //    //script.setInjectionPoint( QWebEngineScript::DocumentCreation );
+    //    //script.setRunsOnSubFrames( true );
+    //    //script.setWorldId( QWebEngineScript::MainWorld );
+    //    //script.setSourceCode( file.readAll() );
+    //    //
+    //    //QWebEngineProfile::defaultProfile()->scripts()->insert( script );
+    //}
+
     {
-        //QWebEngineScript script;
-        //
-        //script.setInjectionPoint( QWebEngineScript::DocumentCreation );
-        //script.setRunsOnSubFrames( true );
-        //script.setWorldId( QWebEngineScript::MainWorld );
-        //script.setSourceCode( file.readAll() );
-        //
-        //QWebEngineProfile::defaultProfile()->scripts()->insert( script );
-    }
+        auto window = this->CreateWindow();
 
-    this->CreateWindow();
+        //window->Tab()->SetURL( "localhost:3000" );
+    }
 
     auto code = QApplication::exec();
 
-    for ( auto window : this->windows_ )
     {
-        delete window;
+        for ( auto window : this->windows_ )
+        {
+            delete window;
+        }
     }
 
     return code;
@@ -78,14 +91,7 @@ MainWindow* Client::CreateWindow()
 
     this->windows_.append( window );
 
-    QObject::connect
-        (
-            window, &QObject::destroyed,
-            [ = ]()
-            {
-                this->windows_.removeOne( window );
-            }
-        );
+    QObject::connect( window, &QObject::destroyed, [ this, window ]() { this->windows_.removeOne( window ); } );
 
     return window;
 }

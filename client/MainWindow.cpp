@@ -1,5 +1,5 @@
 //
-// Created by 岳子剑 on 2019/9/27.
+// Created by 岳子剑 on 2019/09/27.
 //
 
 
@@ -8,7 +8,6 @@
 #include "MainWindow.hpp"
 
 #include <QWebEngineHistory>
-#include <QWebEngineHistoryItem>
 #include <QWebEngineProfile>
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
@@ -27,46 +26,46 @@ MainWindow::MainWindow( Client* client, QWebEngineProfile* profile ) : client_( 
     //this->ToURL( "192.168.1.7:3000" );
 }
 
-//void MainWindow::InstallPlugin()
-//{
-//    //auto library = Util::Library( "activex" );
-//    //
-//    //if ( library.load() )
-//    //{
-//    //    typedef QWidget* ( *Function )( QWebEnginePage*, const QString& );
-//    //
-//    //    {
-//    //        auto CreateWidget = ( Function )( library.resolve( "CreateWidgetEditor" ) );
-//    //
-//    //        if ( CreateWidget )
-//    //        {
-//    //            QWidget* widget = CreateWidget( this->view_->page(), "editor" );
-//    //
-//    //            if ( widget )
-//    //            {
-//    //                this->AddAssistWidget( "Editor", widget );
-//    //            }
-//    //        }
-//    //    }
-//    //    {
-//    //        auto CreateWidget = ( Function )( library.resolve( "CreateWidgetReport" ) );
-//    //
-//    //        if ( CreateWidget )
-//    //        {
-//    //            QWidget* widget = CreateWidget( this->view_->page(), "report" );
-//    //
-//    //            if ( widget )
-//    //            {
-//    //                this->AddAssistWidget( "Report", widget );
-//    //            }
-//    //        }
-//    //    }
-//    //
-//    //    return;
-//    //}
-//    //
-//    //QMessageBox::warning( this, QObject::tr( "Warning" ), library.errorString() );
-//}
+void MainWindow::InstallPlugin()
+{
+    //auto library = Util::Library( "activex" );
+    //
+    //if ( library.load() )
+    //{
+    //    typedef QWidget* ( *Function )( QWebEnginePage*, const QString& );
+    //
+    //    {
+    //        auto CreateWidget = ( Function )( library.resolve( "CreateWidgetEditor" ) );
+    //
+    //        if ( CreateWidget )
+    //        {
+    //            QWidget* widget = CreateWidget( this->view_->page(), "editor" );
+    //
+    //            if ( widget )
+    //            {
+    //                this->AddAssistWidget( "Editor", widget );
+    //            }
+    //        }
+    //    }
+    //    {
+    //        auto CreateWidget = ( Function )( library.resolve( "CreateWidgetReport" ) );
+    //
+    //        if ( CreateWidget )
+    //        {
+    //            QWidget* widget = CreateWidget( this->view_->page(), "report" );
+    //
+    //            if ( widget )
+    //            {
+    //                this->AddAssistWidget( "Report", widget );
+    //            }
+    //        }
+    //    }
+    //
+    //    return;
+    //}
+    //
+    //QMessageBox::warning( this, QObject::tr( "Warning" ), library.errorString() );
+}
 
 void MainWindow::SetupUI()
 {
@@ -142,7 +141,7 @@ void MainWindow::SetupUI()
         (
             this->edit_, &QLineEdit::returnPressed, [ = ]()
             {
-                this->tab_->SetURL( QUrl::fromUserInput( this->edit_->text() ) );
+                this->tab_->SetURL( this->edit_->text() );
             }
         );
 

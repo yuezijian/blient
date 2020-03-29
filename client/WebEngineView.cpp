@@ -1,5 +1,5 @@
 //
-// Created by 岳子剑 on 2019/9/25.
+// Created by 岳子剑 on 2019/09/25.
 //
 
 
@@ -43,50 +43,39 @@ WebEngineView::WebEngineView()
                 this->load_progress_ = success ? 100 : -1;
             }
         );
-
-    //this->page_ = new WebEnginePage;
-
-    //QWebEngineView::setPage( this->page_ );
 }
 
-WebEngineView::~WebEngineView()
-{
-    //delete this->page_;
-
-    //this->page_ = Q_NULLPTR;
-}
-
-bool WebEngineView::event( QEvent* event )
-{
-    if ( event->type() == QEvent::ChildAdded )
-    {
-        auto ce = dynamic_cast< QChildEvent* >( event );
-
-        if ( ce )
-        {
-            auto child = ce->child();
-
-            auto widget = qobject_cast< QWidget* >( child );
-
-            if ( widget )
-            {
-                widget->installEventFilter( this );
-            }
-        }
-    }
-
-    return QWebEngineView::event( event );
-}
-
-bool WebEngineView::eventFilter( QObject* object, QEvent* event )
-{
-    if ( event->type() == QEvent::FocusIn )
-    {
-        QWebEngineView::update();
-    }
-
-    return QWebEngineView::eventFilter( object, event );
-}
+//bool WebEngineView::event( QEvent* event )
+//{
+//    if ( event->type() == QEvent::ChildAdded )
+//    {
+//        auto ce = dynamic_cast< QChildEvent* >( event );
+//
+//        if ( ce )
+//        {
+//            auto child = ce->child();
+//
+//            auto widget = qobject_cast< QWidget* >( child );
+//
+//            if ( widget )
+//            {
+//                widget->installEventFilter( this );
+//            }
+//        }
+//    }
+//
+//    return QWebEngineView::event( event );
+//}
+//
+//bool WebEngineView::eventFilter( QObject* object, QEvent* event )
+//{
+//    if ( event->type() == QEvent::FocusIn )
+//    {
+//        QWebEngineView::update();
+//    }
+//
+//    return QWebEngineView::eventFilter( object, event );
+//}
 
 QWebEngineView* WebEngineView::createWindow( QWebEnginePage::WebWindowType type )
 {
@@ -107,6 +96,8 @@ QWebEngineView* WebEngineView::createWindow( QWebEnginePage::WebWindowType type 
             case QWebEnginePage::WebDialog:
             {
                 auto popup = new WebEngineViewPopup;
+
+                popup->show();
 
                 return popup->View();
             }

@@ -27,7 +27,6 @@ TabWidget::TabWidget()
         (
             tab, &QTabBar::tabBarDoubleClicked, [ this ]( int index )
             {
-                qDebug() << index;
                 if ( index == -1 )
                 {
                     this->CreateView();
@@ -86,11 +85,13 @@ WebEngineView* TabWidget::CreateView()
 WebEngineView* TabWidget::CreateViewBackground()
 {
     auto view = new WebEngineView;
-    //auto page = new WebEnginePage;
+    auto page = new WebEnginePage( view );
+
+    view->setPage( page );
 
     QObject::connect
         (
-            view, &QWebEngineView::urlChanged, [ = ]( const QUrl &url )
+            view, &QWebEngineView::urlChanged, [ this, view ]( const QUrl &url )
             {
                 auto index = QTabWidget::indexOf( view );
 
@@ -108,7 +109,7 @@ WebEngineView* TabWidget::CreateViewBackground()
 
     QObject::connect
         (
-            view, &QWebEngineView::titleChanged, [ = ]( const QString& title )
+            view, &QWebEngineView::titleChanged, [ this, view ]( const QString& title )
             {
                 int index = QTabWidget::indexOf( view );
 
@@ -136,7 +137,8 @@ WebEngineView* TabWidget::CreateViewBackground()
             }
         );
 
-    //view->setPage( page );
+    //QObject::connect( view, &QObject::destroyed, [ view ]() { view->page()->deleteLater(); } );
+
     view->show();
 
     QTabWidget::addTab( view, QObject::tr( "Empty" ) );
@@ -144,11 +146,11 @@ WebEngineView* TabWidget::CreateViewBackground()
     return view;
 }
 
-void TabWidget::SetURL( const QUrl& url )
+void TabWidget::SetURL( const QString& url )
 {
     if ( auto view = this->View() )
     {
-        view->setUrl( url );
+        view->setUrl( QUrl::fromUserInput( url ) );
         view->setFocus();
     }
 }

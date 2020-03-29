@@ -34,6 +34,7 @@ find_package(Qt5 CONFIG REQUIRED ${QT_PACKAGES})
 add_subdirectory(client)
 add_subdirectory(launcher)
 add_subdirectory(plugin/activex)
+add_subdirectory(test/executable)
 
 #if(WIN32 AND USE_PLUGIN_ACTIVEX)
 #    list(APPEND BLIENT_LAUNCHER_DEPENDENCIES activex)

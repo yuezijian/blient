@@ -18,7 +18,7 @@ class WebEnginePage : public QWebEnginePage
 Q_OBJECT
 
 public:
-    WebEnginePage();
+    explicit WebEnginePage( QObject* parent = Q_NULLPTR );
 
 Q_SIGNALS:
     void JavaScriptConsoleMessage
@@ -37,8 +37,6 @@ protected:
             int line_number,
             const QString& source_id
         ) override;
-
-    //QWebEnginePage* createWindow( QWebEnginePage::WebWindowType type ) override;
 };
 
 
