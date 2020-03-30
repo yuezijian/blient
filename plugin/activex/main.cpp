@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by 岳子剑 on 2019/12/30.
 //
 
@@ -27,7 +27,7 @@ QWidget* CreateWidget( QAxWidget* widget, QObject* object, QWebEnginePage* page,
 
         label->setAlignment( Qt::AlignCenter );
         label->setMargin( 20 );
-        label->setText( QString( QObject::tr( "插件 [ %1 ] 未找到" ) ).arg( name ) );
+        label->setText( QString( QString::fromLocal8Bit( "插件 [ %1 ] 未找到" ) ).arg( name ) );
 
         return label;
     }

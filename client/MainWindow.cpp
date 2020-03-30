@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by 岳子剑 on 2019/09/27.
 //
 
@@ -70,10 +70,10 @@ void MainWindow::InstallPlugin()
 void MainWindow::SetupUI()
 {
     {
-        auto menu = new QMenu( QObject::tr( "文件" ) );
+        auto menu = new QMenu( QString::fromLocal8Bit( "文件" ) );
 
-        auto tab_open  = new QAction( QObject::tr( "新建标签页" ) );
-        auto tab_close = new QAction( QObject::tr( "关闭标签页" ) );
+        auto tab_open  = new QAction( QString::fromLocal8Bit( "新建标签页" ) );
+        auto tab_close = new QAction( QString::fromLocal8Bit( "关闭标签页" ) );
 
         tab_open->setShortcut( QKeySequence::AddTab );
         tab_close->setShortcut( QKeySequence::Close );
@@ -107,9 +107,9 @@ void MainWindow::SetupUI()
     this->tool_->setMovable( false );
     this->tool_->toggleViewAction()->setEnabled( false );
 
-    this->nav_back_    = new QAction( QObject::tr( "后退" ) );
-    this->nav_forward_ = new QAction( QObject::tr( "前进" ) );
-    this->nav_reload_  = new QAction( QObject::tr( "刷新" ) );
+    this->nav_back_    = new QAction( QString::fromLocal8Bit( "后退" ) );
+    this->nav_forward_ = new QAction( QString::fromLocal8Bit( "前进" ) );
+    this->nav_reload_  = new QAction( QString::fromLocal8Bit( "刷新" ) );
 
     {
         auto shortcuts = QKeySequence::keyBindings( QKeySequence::Back );
@@ -267,7 +267,7 @@ void MainWindow::LoadProgress( int progress )
 {
     if ( 0 < progress && progress < 100 )
     {
-        this->nav_reload_->setText( QObject::tr( "停止"  ) );
+        this->nav_reload_->setText( QString::fromLocal8Bit( "停止"  ) );
         this->nav_reload_->setData( QWebEnginePage::Stop );
 
         if ( this->progress_->isHidden() )
@@ -279,7 +279,7 @@ void MainWindow::LoadProgress( int progress )
     }
     else
     {
-        this->nav_reload_->setText( QObject::tr( "刷新"  ) );
+        this->nav_reload_->setText( QString::fromLocal8Bit( "刷新"  ) );
         this->nav_reload_->setData( QWebEnginePage::Reload );
 
         this->progress_->hide();

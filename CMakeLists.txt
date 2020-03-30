@@ -18,6 +18,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/../_build")
 
 if(MSVC)
     add_compile_options(/wd4819)
+    add_definitions(-DUNICODE -D_UNICODE)
 endif()
 
 set(QT_PACKAGES Core Gui WebEngineWidgets Widgets)
