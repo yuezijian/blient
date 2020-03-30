@@ -69,15 +69,88 @@ void MainWindow::InstallPlugin()
 
 void MainWindow::SetupUI()
 {
+    {
+        auto menu = new QMenu( QObject::tr( "文件" ) );
+
+        auto tab_open  = new QAction( QObject::tr( "新建标签页" ) );
+        auto tab_close = new QAction( QObject::tr( "关闭标签页" ) );
+
+        tab_open->setShortcut( QKeySequence::AddTab );
+        tab_close->setShortcut( QKeySequence::Close );
+
+        menu->addAction( tab_open );
+        menu->addAction( tab_close );
+
+        QObject::connect
+            (
+                tab_open, &QAction::triggered, [ this ]()
+                {
+                    this->tab_->CreateView();
+                    this->edit_->setFocus();
+                }
+            );
+
+        QObject::connect
+            (
+                tab_close, &QAction::triggered, [ this ]()
+                {
+                    this->tab_->CloseActiveView();
+                }
+            );
+
+        QMainWindow::menuBar()->addMenu( menu );
+    }
+
     this->tool_ = new QToolBar();
 
     this->tool_->setFloatable( false );
     this->tool_->setMovable( false );
     this->tool_->toggleViewAction()->setEnabled( false );
 
-    this->nav_back_    = new QAction( QObject::tr( "Back"    ) );
-    this->nav_forward_ = new QAction( QObject::tr( "Forward" ) );
-    this->nav_reload_  = new QAction( QObject::tr( "Reload"  ) );
+    this->nav_back_    = new QAction( QObject::tr( "后退" ) );
+    this->nav_forward_ = new QAction( QObject::tr( "前进" ) );
+    this->nav_reload_  = new QAction( QObject::tr( "刷新" ) );
+
+    {
+        auto shortcuts = QKeySequence::keyBindings( QKeySequence::Back );
+
+        for ( auto i = shortcuts.begin(); i != shortcuts.end(); )
+        {
+            if ( ( *i )[0] == Qt::Key_Backspace )
+            {
+                i = shortcuts.erase(i);
+            }
+            else
+            {
+                ++i;
+            }
+        }
+
+        shortcuts.append( QKeySequence( Qt::Key_Back ) );
+
+        this->nav_back_->setShortcuts( shortcuts );
+    }
+    {
+        auto shortcuts = QKeySequence::keyBindings( QKeySequence::Forward );
+
+        for ( auto i = shortcuts.begin(); i != shortcuts.end(); )
+        {
+            if ( ( ( *i )[0] & Qt::Key_unknown )== Qt::Key_Backspace )
+            {
+                i = shortcuts.erase(i);
+            }
+            else
+            {
+                ++i;
+            }
+        }
+
+        shortcuts.append( QKeySequence( Qt::Key_Forward ) );
+
+        this->nav_forward_->setShortcuts( shortcuts );
+    }
+
+    this->nav_reload_->setShortcuts( QKeySequence::Refresh );
 
     this->edit_ = new QLineEdit;
 
@@ -92,12 +165,11 @@ void MainWindow::SetupUI()
     auto widget = new QWidget;
     auto layout = new QVBoxLayout;
 
-    this->tab_  = new TabWidget;
+    this->tab_ = new TabWidget;
 
     widget->setLayout( layout );
 
     layout->addWidget( this->tab_ );
-
     layout->setContentsMargins( 0, 0, 0, 0 );
     layout->setSpacing( 0 );
 
@@ -195,7 +267,7 @@ void MainWindow::LoadProgress( int progress )
 {
     if ( 0 < progress && progress < 100 )
     {
-        this->nav_reload_->setText( QObject::tr( "Stop"  ) );
+        this->nav_reload_->setText( QObject::tr( "停止"  ) );
         this->nav_reload_->setData( QWebEnginePage::Stop );
 
         if ( this->progress_->isHidden() )
@@ -207,7 +279,7 @@ void MainWindow::LoadProgress( int progress )
     }
     else
     {
-        this->nav_reload_->setText( QObject::tr( "Reload"  ) );
+        this->nav_reload_->setText( QObject::tr( "刷新"  ) );
         this->nav_reload_->setData( QWebEnginePage::Reload );
 
         this->progress_->hide();

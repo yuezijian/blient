@@ -27,7 +27,7 @@ QWidget* CreateWidget( QAxWidget* widget, QObject* object, QWebEnginePage* page,
 
         label->setAlignment( Qt::AlignCenter );
         label->setMargin( 20 );
-        label->setText( QString( QObject::tr( "Plugin [ %1 ] not found" ) ).arg( name ) );
+        label->setText( QString( QObject::tr( "插件 [ %1 ] 未找到" ) ).arg( name ) );
 
         return label;
     }

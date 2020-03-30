@@ -21,7 +21,8 @@ Q_OBJECT
 public:
     TabWidget();
 
-    [[nodiscard]] WebEngineView* View() const;
+    [[nodiscard]] WebEngineView* ActiveView() const;
+
     [[nodiscard]] WebEngineView* View( int index ) const;
 
 signals:
@@ -32,10 +33,12 @@ signals:
     void LoadProgress( int progress );
 
 public slots:
-    void CloseTab( int index );
-
     WebEngineView* CreateView();
     WebEngineView* CreateViewBackground();
+
+    void CloseActiveView();
+
+    void CloseView( int index );
 
     void SetURL( const QString& url );
 

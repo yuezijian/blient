@@ -34,12 +34,12 @@ TabWidget::TabWidget()
             }
         );
 
-    QObject::connect( tab, &QTabBar::tabCloseRequested, this, &TabWidget::CloseTab );
+    QObject::connect( tab, &QTabBar::tabCloseRequested, this, &TabWidget::CloseView );
 
     QObject::connect( this, &QTabWidget::currentChanged, this, &TabWidget::ChangeCurrent );
 }
 
-WebEngineView* TabWidget::View() const
+WebEngineView* TabWidget::ActiveView() const
 {
     return qobject_cast< WebEngineView* >( QTabWidget::currentWidget() );
 }
@@ -47,30 +47,6 @@ WebEngineView* TabWidget::View() const
 WebEngineView* TabWidget::View( int index ) const
 {
     return qobject_cast< WebEngineView* >( QTabWidget::widget( index ) );
-}
-
-void TabWidget::CloseTab( int index )
-{
-    if ( auto view = this->View( index ) )
-    {
-        auto focus = view->hasFocus();
-
-        QTabWidget::removeTab( index );
-
-        auto count = QTabWidget::count();
-
-        if ( focus && count > 0 )
-        {
-            this->View()->setFocus();
-        }
-
-        if ( count == 0 )
-        {
-            this->CreateView();
-        }
-
-        view->deleteLater();
-    }
 }
 
 WebEngineView* TabWidget::CreateView()
@@ -141,14 +117,62 @@ WebEngineView* TabWidget::CreateViewBackground()
 
     view->show();
 
-    QTabWidget::addTab( view, QObject::tr( "Empty" ) );
+    QTabWidget::addTab( view, QObject::tr( "新页面" ) );
 
     return view;
 }
 
+void TabWidget::CloseActiveView()
+{
+    if ( auto view = this->ActiveView() )
+    {
+        auto focus = view->hasFocus();
+
+        QTabWidget::removeTab( QTabWidget::indexOf( view ) );
+
+        auto count = QTabWidget::count();
+
+        if ( focus && count > 0 )
+        {
+            this->ActiveView()->setFocus();
+        }
+
+        if ( count == 0 )
+        {
+            this->CreateView();
+        }
+
+        view->deleteLater();
+    }
+}
+
+void TabWidget::CloseView( int index )
+{
+    if ( auto view = this->View( index ) )
+    {
+        auto focus = view->hasFocus();
+
+        QTabWidget::removeTab( index );
+
+        auto count = QTabWidget::count();
+
+        if ( focus && count > 0 )
+        {
+            this->ActiveView()->setFocus();
+        }
+
+        if ( count == 0 )
+        {
+            this->CreateView();
+        }
+
+        view->deleteLater();
+    }
+}
+
 void TabWidget::SetURL( const QString& url )
 {
-    if ( auto view = this->View() )
+    if ( auto view = this->ActiveView() )
     {
         view->setUrl( QUrl::fromUserInput( url ) );
         view->setFocus();
@@ -180,7 +204,7 @@ void TabWidget::ChangeCurrent( int index )
 
 void TabWidget::TriggerWebAction( QWebEnginePage::WebAction action )
 {
-    if ( auto view = this->View() )
+    if ( auto view = this->ActiveView() )
     {
         view->triggerPageAction( action );
         view->setFocus();

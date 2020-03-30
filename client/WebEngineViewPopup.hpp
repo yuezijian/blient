@@ -9,6 +9,12 @@
 
 #include <QWebEngineView>
 
+QT_BEGIN_NAMESPACE
+class QLineEdit;
+class QProgressBar;
+class QWebEngineProfile;
+QT_END_NAMESPACE
+
 
 class WebEngineView;
 
@@ -23,6 +29,8 @@ public:
     [[nodiscard]] WebEngineView* View() const { return this->view_; }
 
 private:
+    QLineEdit* edit_ = Q_NULLPTR;
+
     WebEngineView* view_ = Q_NULLPTR;
 };
 

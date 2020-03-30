@@ -64,7 +64,7 @@ int main( int argc, char* argv[] )
         QMessageBox::critical
         (
             Q_NULLPTR,
-            QObject::tr( "Error" ),
+            QObject::tr( "无法加载模块" ),
             library.errorString()
         );
     }

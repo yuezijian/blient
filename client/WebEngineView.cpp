@@ -87,7 +87,7 @@ QWebEngineView* WebEngineView::createWindow( QWebEnginePage::WebWindowType type 
         {
             case QWebEnginePage::WebBrowserWindow:
             {
-                return window->ClientInstance()->CreateWindow()->Tab()->View();
+                return window->ClientInstance()->CreateWindow()->Tab()->ActiveView();
             }
             case QWebEnginePage::WebBrowserTab:
             {
