@@ -7,8 +7,10 @@
 
 #include <QDebug>
 
+#include <QDir>
 #include <QProcess>
 
+#include <QMessageBox>
 #include <QWebEngineUrlRequestJob>
 
 
@@ -23,16 +25,30 @@ void WebEngineUrlSchemeHandlerExecutable::requestStarted( QWebEngineUrlRequestJo
 
     if ( url.startsWith( "executable://" ) )
     {
-        auto command = url.remove( 0, 13 );
+        auto content = url.remove( 0, 13 );
 
-        //qDebug() << command;
+        auto i = content.indexOf( "?" );
 
-        auto i = command.indexOf( "?" );
+        auto program = QDir( content.left( i ) ).absolutePath();
 
-        auto program = command.left( i );
+        auto arguments = content.remove( 0, i + 1 ).split( "&" );
 
-        auto arguments = command.remove( 0, i + 1 ).split( "&" );
+        auto command = program;
 
-        QProcess::startDetached( program, arguments );
+        for ( auto& arg : arguments )
+        {
+            command += " ";
+            command += arg;
+        };
+
+        if ( !QProcess::startDetached( program, arguments ) )
+        {
+            QMessageBox::warning
+                (
+                    Q_NULLPTR,
+                    QObject::tr( "Warning" ),
+                    QString( "Can not execute command:\n%1" ).arg( command )
+                );
+        }
     }
 }
