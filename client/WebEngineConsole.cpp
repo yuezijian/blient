@@ -6,10 +6,9 @@
 #include "WebEngineConsole.hpp"
 
 #include "WebEnginePage.hpp"
-#include "WebEngineView.hpp"
 
 
-WebEngineConsole::WebEngineConsole( WebEngineView* view )
+WebEngineConsole::WebEngineConsole( WebEnginePage* page )
 {
     //auto toolbar = new QToolBar;
     //
@@ -32,7 +31,7 @@ WebEngineConsole::WebEngineConsole( WebEngineView* view )
 
     QMainWindow::setCentralWidget( list );
 
-    auto function = [ = ]
+    auto function = [ model ]
         (
             QWebEnginePage::JavaScriptConsoleMessageLevel level,
             const QString& message,
@@ -74,9 +73,5 @@ WebEngineConsole::WebEngineConsole( WebEngineView* view )
         model->appendRow( item );
     };
 
-    //QObject::connect
-    //    (
-    //        view->Page(), &WebEnginePage::JavaScriptConsoleMessage,
-    //        function
-    //    );
+    QObject::connect( page, &WebEnginePage::JavaScriptConsoleMessage, function );
 }

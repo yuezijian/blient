@@ -11,6 +11,8 @@ set(BLIENT_CLIENT_SOURCE
         TabWidget.cpp
         MainWindow.hpp
         MainWindow.cpp
+        WebEngineChannelObject.hpp
+        WebEngineChannelObject.cpp
         WebEngineConsole.hpp
         WebEngineConsole.cpp
         WebEnginePage.hpp

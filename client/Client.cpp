@@ -11,6 +11,8 @@
 #include <QFile>
 
 #include <QWebEngineProfile>
+#include <QWebEngineScript>
+#include <QWebEngineScriptCollection>
 #include <QWebEngineUrlScheme>
 
 #include "MainWindow.hpp"
@@ -39,24 +41,34 @@ int Client::Main( int argc, char* argv[] )
 
     QWebEngineProfile::defaultProfile()->installUrlSchemeHandler( "executable", new WebEngineUrlSchemeHandlerExecutable );
 
-    //QFile file( ":/blient.js" );
-    //
-    //if ( file.open( QFile::ReadOnly ) )
-    //{
-    //    //QWebEngineScript script;
-    //    //
-    //    //script.setInjectionPoint( QWebEngineScript::DocumentCreation );
-    //    //script.setRunsOnSubFrames( true );
-    //    //script.setWorldId( QWebEngineScript::MainWorld );
-    //    //script.setSourceCode( file.readAll() );
-    //    //
-    //    //QWebEngineProfile::defaultProfile()->scripts()->insert( script );
-    //}
+    QFile file( ":/blient.js" );
+
+    if ( file.open( QFile::ReadOnly ) )
+    {
+        QWebEngineScript script;
+
+        script.setInjectionPoint( QWebEngineScript::DocumentCreation );
+        script.setRunsOnSubFrames( true );
+        script.setWorldId( QWebEngineScript::MainWorld );
+        script.setSourceCode( file.readAll() );
+
+        QWebEngineProfile::defaultProfile()->scripts()->insert( script );
+    }
 
     {
         auto window = this->CreateWindow();
 
-        //window->Tab()->SetURL( "localhost:3000" );
+        const QStringList arguments = QCoreApplication::arguments();
+
+        for ( const QString& argument : arguments.mid( 1 ) )
+        {
+            if ( !argument.startsWith( QLatin1Char( '-' ) ) )
+            {
+                window->Tab()->SetURL( argument );
+
+                break;
+            }
+        }
     }
 
     auto code = QApplication::exec();

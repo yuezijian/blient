@@ -10,7 +10,9 @@
 
 
 QT_BEGIN_NAMESPACE
+
 class QWebEngineUrlRequestJob;
+
 QT_END_NAMESPACE
 
 

@@ -19,8 +19,6 @@ else()
     list(APPEND BLIENT_ACTIVEX_SOURCE
             AxWidget.hpp
             AxWidget.cpp
-            WebEngineChannelObject.hpp
-            WebEngineChannelObject.cpp
             )
 endif()
 

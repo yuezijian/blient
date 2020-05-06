@@ -8,10 +8,16 @@
 #include <QWebChannel>
 #include <QWebEngineSettings>
 
+#include "WebEngineChannelObject.hpp"
+
 
 WebEnginePage::WebEnginePage( QObject* parent ) : QWebEnginePage( parent )
 {
-    QWebEnginePage::setWebChannel( new QWebChannel );
+    auto channel = new QWebChannel;
+
+    channel->registerObject( "blient", new WebEngineChannelObject( this ) );
+
+    QWebEnginePage::setWebChannel( channel );
 }
 
 void WebEnginePage::javaScriptConsoleMessage( QWebEnginePage::JavaScriptConsoleMessageLevel level, const QString& message, int line_number, const QString& source_id )

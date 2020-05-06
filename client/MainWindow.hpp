@@ -11,9 +11,11 @@
 
 
 QT_BEGIN_NAMESPACE
+
 class QLineEdit;
 class QProgressBar;
 class QWebEngineProfile;
+
 QT_END_NAMESPACE
 
 

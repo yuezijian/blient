@@ -10,13 +10,13 @@
 #include <QtWidgets>
 
 
-class WebEngineView;
+class WebEnginePage;
 
 
 class WebEngineConsole : public QMainWindow
 {
 public:
-    explicit WebEngineConsole( WebEngineView* view );
+    explicit WebEngineConsole( WebEnginePage* page );
 };
 
 

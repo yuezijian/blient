@@ -3,15 +3,12 @@
 //
 
 
-#ifndef WEB_ENGINE_CHANNEL_OBJECT__HPP
-#define WEB_ENGINE_CHANNEL_OBJECT__HPP
+#ifndef BLIENT__CLIENT__WEB_ENGINE_CHANNEL_OBJECT__HPP
+#define BLIENT__CLIENT__WEB_ENGINE_CHANNEL_OBJECT__HPP
 
 
 #include <QObject>
 #include <QVariant>
-
-
-class AxWidget;
 
 
 class WebEngineChannelObject : public QObject
@@ -19,7 +16,7 @@ class WebEngineChannelObject : public QObject
 Q_OBJECT
 
 public:
-    explicit WebEngineChannelObject( AxWidget* widget );
+    explicit WebEngineChannelObject( QObject* parent = Q_NULLPTR );
 
     // 调用前台页面的 JS 逻辑
 
@@ -32,11 +29,9 @@ public Q_SLOTS:
 
     // 来自前台业务的 JS 调用
 
-    QVariant FileOpenString( const QVariant& value );
+    QVariant CreatePlugin( const QVariant& value );
 
 private:
-    AxWidget* widget_ = Q_NULLPTR;
-
     QString my_property_;
 };
 

@@ -6,6 +6,7 @@
 #include "TabWidget.hpp"
 
 #include <QTabBar>
+#include <QWebChannel>
 
 #include "WebEnginePage.hpp"
 #include "WebEngineView.hpp"
@@ -112,8 +113,6 @@ WebEngineView* TabWidget::CreateViewBackground()
                 }
             }
         );
-
-    //QObject::connect( view, &QObject::destroyed, [ view ]() { view->page()->deleteLater(); } );
 
     view->show();
 

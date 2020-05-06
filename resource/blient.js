@@ -429,32 +429,47 @@ function QObject(name, data, webChannel)
 }
 
 
-window.Blient =
+function create_channel(object, callback)
+{
+    const channel = new QWebChannel();
+
+    const setup = (data) =>
     {
-        create(plugin, callback)
+        for (const name in data)
         {
-            const channel = new QWebChannel();
-
-            const setup = (data) =>
-            {
-                for (const name in data)
-                {
-                    new QObject(name, data[name], channel);
-                }
-
-                for (const name in channel.objects)
-                {
-                    channel.objects[name].unwrapProperties();
-                }
-
-                if (callback)
-                {
-                    callback(channel.objects[plugin]);
-                }
-
-                channel.execute({type: QWebChannelMessageTypes.idle});
-            };
-
-            channel.execute({type: QWebChannelMessageTypes.init}, setup);
+            new QObject(name, data[name], channel);
         }
+
+        for (const name in channel.objects)
+        {
+            channel.objects[name].unwrapProperties();
+        }
+
+        if (callback)
+        {
+            callback(channel.objects[object]);
+        }
+
+        channel.execute({ type: QWebChannelMessageTypes.idle });
     };
+
+    channel.execute({ type: QWebChannelMessageTypes.init }, setup);
+}
+
+// window.Blient =
+//     {
+//         init(callback)
+//         {
+//             create_channel('blient', callback);
+//         }
+//     };
+
+
+window.Blient = function ()
+{
+    let blient = null;
+
+    create_channel('blient', object => blient = object);
+
+    return blient;
+}
