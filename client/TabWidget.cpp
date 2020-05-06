@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by 岳子剑 on 2020/3/11.
 //
 
@@ -116,7 +116,7 @@ WebEngineView* TabWidget::CreateViewBackground()
 
     view->show();
 
-    QTabWidget::addTab( view, QObject::tr( "新页面" ) );
+    QTabWidget::addTab( view, QString::fromLocal8Bit( "新页面" ) );
 
     return view;
 }
