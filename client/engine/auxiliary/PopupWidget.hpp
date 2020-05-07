@@ -3,8 +3,8 @@
 //
 
 
-#ifndef BLIENT__CLIENT__WEB_ENGINE_VIEW_POPUP__HPP
-#define BLIENT__CLIENT__WEB_ENGINE_VIEW_POPUP__HPP
+#ifndef BLIENT__CLIENT__ENGINE__AUXILIARY__POPUP_WIDGET__HPP
+#define BLIENT__CLIENT__ENGINE__AUXILIARY__POPUP_WIDGET__HPP
 
 
 #include <QWebEngineView>
@@ -22,12 +22,12 @@ QT_END_NAMESPACE
 class WebEngineView;
 
 
-class WebEngineViewPopup : public QWidget
+class PopupWidget : public QWidget
 {
 Q_OBJECT
 
 public:
-    WebEngineViewPopup();
+    PopupWidget();
 
     [[nodiscard]] WebEngineView* View() const { return this->view_; }
 

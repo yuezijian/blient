@@ -11,14 +11,17 @@
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
 
+#include "../WebWidget.hpp"
+
 #include "Client.hpp"
 #include "MainWindow.hpp"
 #include "TabWidget.hpp"
 #include "WebEnginePage.hpp"
-#include "WebEngineViewPopup.hpp"
+
+#include "engine/auxiliary/PopupWidget.hpp"
 
 
-WebEngineView::WebEngineView()
+WebEngineView::WebEngineView( QWidget* parent ) : QWebEngineView( parent )
 {
     QObject::connect
         (
@@ -43,6 +46,10 @@ WebEngineView::WebEngineView()
                 this->load_progress_ = success ? 100 : -1;
             }
         );
+
+    //QWebEngineView::setSizePolicy( QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding );
+
+    QWebEngineView::setMinimumWidth( 500 );
 }
 
 //bool WebEngineView::event( QEvent* event )
@@ -87,15 +94,15 @@ QWebEngineView* WebEngineView::createWindow( QWebEnginePage::WebWindowType type 
         {
             case QWebEnginePage::WebBrowserWindow:
             {
-                return window->ClientInstance()->CreateWindow()->Tab()->ActiveView();
+                return window->ClientInstance()->CreateWindow()->Tab()->ActiveWidget()->View();
             }
             case QWebEnginePage::WebBrowserTab:
             {
-                return window->Tab()->CreateView();
+                return window->Tab()->CreateWidgetActive()->View();
             }
             case QWebEnginePage::WebDialog:
             {
-                auto popup = new WebEngineViewPopup;
+                auto popup = new PopupWidget;
 
                 popup->show();
 
@@ -103,7 +110,7 @@ QWebEngineView* WebEngineView::createWindow( QWebEnginePage::WebWindowType type 
             }
             case QWebEnginePage::WebBrowserBackgroundTab:
             {
-                return window->Tab()->CreateViewBackground();
+                return window->Tab()->CreateWidget()->View();
             }
             default:
                 ;

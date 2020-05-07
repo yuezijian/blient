@@ -13,9 +13,9 @@
 #include <QWebEngineScriptCollection>
 
 #include "TabWidget.hpp"
-#include "WebEngineConsole.hpp"
-#include "WebEnginePage.hpp"
-#include "WebEngineView.hpp"
+#include "engine/auxiliary/ConsoleWidget.hpp"
+#include "engine/WebEnginePage.hpp"
+#include "engine/WebEngineView.hpp"
 
 
 MainWindow::MainWindow( Client* client, QWebEngineProfile* profile ) : client_( client )
@@ -85,7 +85,7 @@ void MainWindow::SetupUI()
             (
                 tab_open, &QAction::triggered, [ this ]()
                 {
-                    this->tab_->CreateView();
+                    this->tab_->CreateWidgetActive();
                     this->edit_->setFocus();
                 }
             );
@@ -94,7 +94,7 @@ void MainWindow::SetupUI()
             (
                 tab_close, &QAction::triggered, [ this ]()
                 {
-                    this->tab_->CloseActiveView();
+                    this->tab_->CloseWidgetActive();
                 }
             );
 
@@ -233,7 +233,7 @@ void MainWindow::SetupUI()
     //
     //this->AddAssistWidget( QObject::tr( "Console" ), console );
 
-    this->tab_->CreateView();
+    this->tab_->CreateWidgetActive();
 }
 
 void MainWindow::AddAssistWidget( const QString& title, QWidget* widget, int width )

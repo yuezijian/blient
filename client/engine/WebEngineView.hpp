@@ -18,7 +18,7 @@ class WebEngineView : public QWebEngineView
 Q_OBJECT
 
 public:
-    WebEngineView();
+    explicit WebEngineView( QWidget* parent = Q_NULLPTR );
 
     [[nodiscard]] int LoadProgress() const { return this->load_progress_; }
 

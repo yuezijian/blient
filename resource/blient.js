@@ -180,11 +180,14 @@ function QObject(name, data, webChannel)
         var objectId = response.id;
 
         if (webChannel.objects[objectId])
+        {
             return webChannel.objects[objectId];
+        }
 
         if (!response.data)
         {
             console.error("Cannot unwrap unknown QObject " + objectId + " without data.");
+
             return;
         }
 
@@ -422,32 +425,32 @@ function QObject(name, data, webChannel)
 
     data.signals.forEach(function(signal) { addSignal(signal, false); });
 
-    for (var name1 in data.enums)
+    for (const name1 in data.enums)
     {
         object[name1] = data.enums[name1];
     }
 }
 
 
-function create_channel(object, callback)
+function create_channel(name, callback)
 {
     const channel = new QWebChannel();
 
     const setup = (data) =>
     {
-        for (const name in data)
+        for (const n in data)
         {
-            new QObject(name, data[name], channel);
+            new QObject(n, data[n], channel);
         }
 
-        for (const name in channel.objects)
+        for (const n in channel.objects)
         {
-            channel.objects[name].unwrapProperties();
+            channel.objects[n].unwrapProperties();
         }
 
         if (callback)
         {
-            callback(channel.objects[object]);
+            callback(channel.objects[name]);
         }
 
         channel.execute({ type: QWebChannelMessageTypes.idle });
@@ -456,20 +459,8 @@ function create_channel(object, callback)
     channel.execute({ type: QWebChannelMessageTypes.init }, setup);
 }
 
-// window.Blient =
-//     {
-//         init(callback)
-//         {
-//             create_channel('blient', callback);
-//         }
-//     };
 
-
-window.Blient = function ()
+window.Blient = function (callback)
 {
-    let blient = null;
-
-    create_channel('blient', object => blient = object);
-
-    return blient;
+    create_channel('blient', callback);
 }

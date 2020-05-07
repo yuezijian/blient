@@ -8,14 +8,14 @@
 #include <QWebChannel>
 #include <QWebEngineSettings>
 
-#include "WebEngineChannelObject.hpp"
+#include "engine/auxiliary/ChannelObject.hpp"
 
 
 WebEnginePage::WebEnginePage( QObject* parent ) : QWebEnginePage( parent )
 {
     auto channel = new QWebChannel;
 
-    channel->registerObject( "blient", new WebEngineChannelObject( this ) );
+    channel->registerObject( "blient", new ChannelObject( this ) );
 
     QWebEnginePage::setWebChannel( channel );
 }

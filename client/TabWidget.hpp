@@ -11,7 +11,7 @@
 #include <QWebEnginePage>
 
 
-class WebEngineView;
+class WebWidget;
 
 
 class TabWidget : public QTabWidget
@@ -21,9 +21,9 @@ Q_OBJECT
 public:
     TabWidget();
 
-    [[nodiscard]] WebEngineView* ActiveView() const;
+    [[nodiscard]] WebWidget* ActiveWidget() const;
 
-    [[nodiscard]] WebEngineView* View( int index ) const;
+    [[nodiscard]] WebWidget* Widget( int index ) const;
 
 signals:
     void ChangeURL( const QUrl& url );
@@ -33,12 +33,12 @@ signals:
     void LoadProgress( int progress );
 
 public slots:
-    WebEngineView* CreateView();
-    WebEngineView* CreateViewBackground();
+    WebWidget* CreateWidget();
+    WebWidget* CreateWidgetActive();
 
-    void CloseActiveView();
+    void CloseWidget( int index );
 
-    void CloseView( int index );
+    void CloseWidgetActive();
 
     void SetURL( const QString& url );
 

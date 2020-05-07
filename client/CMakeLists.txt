@@ -7,22 +7,24 @@ set(BLIENT_CLIENT_SOURCE
         _client.cpp
         Client.hpp
         Client.cpp
-        TabWidget.hpp
-        TabWidget.cpp
         MainWindow.hpp
         MainWindow.cpp
-        WebEngineChannelObject.hpp
-        WebEngineChannelObject.cpp
-        WebEngineConsole.hpp
-        WebEngineConsole.cpp
-        WebEnginePage.hpp
-        WebEnginePage.cpp
-        WebEngineUrlSchemeHandlerExecutable.hpp
-        WebEngineUrlSchemeHandlerExecutable.cpp
-        WebEngineView.hpp
-        WebEngineView.cpp
-        WebEngineViewPopup.hpp
-        WebEngineViewPopup.cpp
+        TabWidget.hpp
+        TabWidget.cpp
+        WebWidget.hpp
+        WebWidget.cpp
+        engine/WebEnginePage.hpp
+        engine/WebEnginePage.cpp
+        engine/WebEngineUrlSchemeHandlerExecutable.hpp
+        engine/WebEngineUrlSchemeHandlerExecutable.cpp
+        engine/WebEngineView.hpp
+        engine/WebEngineView.cpp
+        engine/auxiliary/ChannelObject.hpp
+        engine/auxiliary/ChannelObject.cpp
+        engine/auxiliary/ConsoleWidget.hpp
+        engine/auxiliary/ConsoleWidget.cpp
+        engine/auxiliary/PopupWidget.hpp
+        engine/auxiliary/PopupWidget.cpp
         )
 
 add_library(client SHARED ${BLIENT_CLIENT_SOURCE} ../resource/resource.qrc)

@@ -17,7 +17,7 @@
 
 #include "MainWindow.hpp"
 #include "TabWidget.hpp"
-#include "WebEngineUrlSchemeHandlerExecutable.hpp"
+#include "engine/WebEngineUrlSchemeHandlerExecutable.hpp"
 
 
 int Client::Main( int argc, char* argv[] )

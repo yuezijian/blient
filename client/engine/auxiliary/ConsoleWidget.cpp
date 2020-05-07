@@ -3,12 +3,12 @@
 //
 
 
-#include "WebEngineConsole.hpp"
+#include "ConsoleWidget.hpp"
 
-#include "WebEnginePage.hpp"
+#include "engine/WebEnginePage.hpp"
 
 
-WebEngineConsole::WebEngineConsole( WebEnginePage* page )
+ConsoleWidget::ConsoleWidget( WebEnginePage* page )
 {
     //auto toolbar = new QToolBar;
     //

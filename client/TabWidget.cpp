@@ -1,5 +1,5 @@
 ﻿//
-// Created by 岳子剑 on 2020/3/11.
+// Created by 岳子剑 on 2020/03/11.
 //
 
 
@@ -8,8 +8,10 @@
 #include <QTabBar>
 #include <QWebChannel>
 
-#include "WebEnginePage.hpp"
-#include "WebEngineView.hpp"
+#include "engine/WebEnginePage.hpp"
+#include "engine/WebEngineView.hpp"
+
+#include "WebWidget.hpp"
 
 
 TabWidget::TabWidget()
@@ -30,47 +32,37 @@ TabWidget::TabWidget()
             {
                 if ( index == -1 )
                 {
-                    this->CreateView();
+                    this->CreateWidgetActive();
                 }
             }
         );
 
-    QObject::connect( tab, &QTabBar::tabCloseRequested, this, &TabWidget::CloseView );
+    QObject::connect( tab, &QTabBar::tabCloseRequested, this, &TabWidget::CloseWidget );
 
     QObject::connect( this, &QTabWidget::currentChanged, this, &TabWidget::ChangeCurrent );
 }
 
-WebEngineView* TabWidget::ActiveView() const
+WebWidget* TabWidget::ActiveWidget() const
 {
-    return qobject_cast< WebEngineView* >( QTabWidget::currentWidget() );
+    return qobject_cast< WebWidget* >( QTabWidget::currentWidget() );
 }
 
-WebEngineView* TabWidget::View( int index ) const
+WebWidget* TabWidget::Widget( int index ) const
 {
-    return qobject_cast< WebEngineView* >( QTabWidget::widget( index ) );
+    return qobject_cast< WebWidget* >( QTabWidget::widget( index ) );
 }
 
-WebEngineView* TabWidget::CreateView()
+WebWidget* TabWidget::CreateWidget()
 {
-    auto view = this->CreateViewBackground();
+    auto widget = new WebWidget;
 
-    QTabWidget::setCurrentWidget( view );
-
-    return view;
-}
-
-WebEngineView* TabWidget::CreateViewBackground()
-{
-    auto view = new WebEngineView;
-    auto page = new WebEnginePage( view );
-
-    view->setPage( page );
+    auto view = widget->View();
 
     QObject::connect
         (
-            view, &QWebEngineView::urlChanged, [ this, view ]( const QUrl &url )
+            view, &QWebEngineView::urlChanged, [ this, widget ]( const QUrl& url )
             {
-                auto index = QTabWidget::indexOf( view );
+                auto index = QTabWidget::indexOf( widget );
 
                 if ( index != -1 )
                 {
@@ -79,16 +71,16 @@ WebEngineView* TabWidget::CreateViewBackground()
 
                 if ( QTabWidget::currentIndex() == index )
                 {
-                    emit ChangeURL(url);
+                    emit ChangeURL( url );
                 }
             }
         );
 
     QObject::connect
         (
-            view, &QWebEngineView::titleChanged, [ this, view ]( const QString& title )
+            view, &QWebEngineView::titleChanged, [ this, widget ]( const QString& title )
             {
-                int index = QTabWidget::indexOf( view );
+                int index = QTabWidget::indexOf( widget );
 
                 if ( index != -1 )
                 {
@@ -105,51 +97,60 @@ WebEngineView* TabWidget::CreateViewBackground()
 
     QObject::connect
         (
-            view, &QWebEngineView::loadProgress, [ this, view ]( int progress )
+            view, &QWebEngineView::loadProgress, [ this, widget ]( int progress )
             {
-                if ( QTabWidget::currentIndex() == QTabWidget::indexOf( view ) )
+                if ( QTabWidget::currentIndex() == QTabWidget::indexOf( widget ) )
                 {
                     emit LoadProgress( progress );
                 }
             }
         );
 
-    view->show();
+    widget->show();
 
-    QTabWidget::addTab( view, QString::fromLocal8Bit( "新页面" ) );
+    QTabWidget::addTab( widget, QString::fromLocal8Bit( "新页面" ) );
 
-    return view;
+    return widget;
 }
 
-void TabWidget::CloseActiveView()
+WebWidget* TabWidget::CreateWidgetActive()
 {
-    if ( auto view = this->ActiveView() )
-    {
-        auto focus = view->hasFocus();
+    auto widget = this->CreateWidget();
 
-        QTabWidget::removeTab( QTabWidget::indexOf( view ) );
+    QTabWidget::setCurrentWidget( widget );
+
+    return widget;
+}
+
+void TabWidget::CloseWidgetActive()
+{
+    if ( auto widget = this->ActiveWidget() )
+    {
+        auto focus = widget->hasFocus();
+
+        QTabWidget::removeTab( QTabWidget::indexOf( widget ) );
 
         auto count = QTabWidget::count();
 
         if ( focus && count > 0 )
         {
-            this->ActiveView()->setFocus();
+            this->ActiveWidget()->setFocus();
         }
 
         if ( count == 0 )
         {
-            this->CreateView();
+            this->CreateWidgetActive();
         }
 
-        view->deleteLater();
+        widget->deleteLater();
     }
 }
 
-void TabWidget::CloseView( int index )
+void TabWidget::CloseWidget( int index )
 {
-    if ( auto view = this->View( index ) )
+    if ( auto widget = this->Widget( index ) )
     {
-        auto focus = view->hasFocus();
+        auto focus = widget->hasFocus();
 
         QTabWidget::removeTab( index );
 
@@ -157,24 +158,24 @@ void TabWidget::CloseView( int index )
 
         if ( focus && count > 0 )
         {
-            this->ActiveView()->setFocus();
+            this->ActiveWidget()->setFocus();
         }
 
         if ( count == 0 )
         {
-            this->CreateView();
+            this->CreateWidgetActive();
         }
 
-        view->deleteLater();
+        widget->deleteLater();
     }
 }
 
 void TabWidget::SetURL( const QString& url )
 {
-    if ( auto view = this->ActiveView() )
+    if ( auto widget = this->ActiveWidget() )
     {
-        view->setUrl( QUrl::fromUserInput( url ) );
-        view->setFocus();
+        widget->View()->setUrl( QUrl::fromUserInput( url ) );
+        widget->setFocus();
     }
 }
 
@@ -182,11 +183,12 @@ void TabWidget::ChangeCurrent( int index )
 {
     if ( index != -1 )
     {
-        auto view = this->View( index );
+        auto widget = this->Widget( index );
+        auto view   = widget->View();
 
         if ( !view->url().isEmpty() )
         {
-            view->setFocus();
+            widget->setFocus();
         }
 
         emit ChangeURL( view->url() );
@@ -195,17 +197,17 @@ void TabWidget::ChangeCurrent( int index )
     }
     else
     {
-        emit ChangeURL(QUrl());
-        emit ChangeTitle(QString());
+        emit ChangeURL( QUrl() );
+        emit ChangeTitle( QString() );
         emit LoadProgress( 0 );
     }
 }
 
 void TabWidget::TriggerWebAction( QWebEnginePage::WebAction action )
 {
-    if ( auto view = this->ActiveView() )
+    if ( auto widget = this->ActiveWidget() )
     {
-        view->triggerPageAction( action );
-        view->setFocus();
+        widget->View()->triggerPageAction( action );
+        widget->setFocus();
     }
 }

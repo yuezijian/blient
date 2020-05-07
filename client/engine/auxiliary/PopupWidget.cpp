@@ -3,16 +3,16 @@
 //
 
 
-#include "WebEngineViewPopup.hpp"
+#include "PopupWidget.hpp"
 
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QWindow>
 
-#include "WebEngineView.hpp"
+#include "engine/WebEngineView.hpp"
 
 
-WebEngineViewPopup::WebEngineViewPopup()
+PopupWidget::PopupWidget()
 {
     QWidget::setAttribute( Qt::WA_DeleteOnClose );
     QWidget::setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );

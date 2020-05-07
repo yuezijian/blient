@@ -10,7 +10,7 @@
 #include <QWebEnginePage>
 
 
-class WebEngineChannelObject;
+class ChannelObject;
 
 
 class WebEnginePage : public QWebEnginePage
